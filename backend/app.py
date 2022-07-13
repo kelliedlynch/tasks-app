@@ -51,10 +51,10 @@ def add_task():
    operation = "preflight"
    if request.method == "POST":
       # jsondict = json.load(request.json)
-      print(request.json["taskName"])
+      print(request.json["name"])
       with sql.connect("database.db") as con:
          cur = con.cursor()
-         cur.execute("INSERT INTO tasks (name, completed) VALUES (?, False)", [request.json["taskName"]] )
+         cur.execute("INSERT INTO tasks (name, completed) VALUES (?, False)", [request.json["name"]] )
          con.commit()
          operation = "inserted task"
          # con.close()

@@ -7,136 +7,82 @@ import React, { useState, useEffect } from 'react';
 const BACKEND_URL = "http://localhost:5000/";
 const GET_API = "tasks";
 const DEL_API = "del-task";
-
-// const demo_tasks = [
-//   { id: 0, name: "task number one", completed: 0 },
-//   { id: 1, name: "task number two", completed: 0 },
-//   { id: 2, name: "task number three", completed: 0 },
-//   { id: 3, name: "task number four", completed: 0 },
-// ];
-
-// const live_tasks = () => {
-  // const data = fetch(BACKEND_URL + GET_API)
-// let live_tasks = []
-
-// fetch(BACKEND_URL + GET_API)
-//     .then(response => response.json())
-//     .then(data => {
-//       live_tasks = data;
-//       // console.log("data", data);
-//     });
-// console.log(live_tasks);
-    // console.log(data);
-    // return data.result;
-
-
+const ADD_API = "add-task";
 
 function App() {
-  const [loading, setLoading] = useState(false);
-  const [listItems, setListItems] = useState([]);
+  // const [loading, setLoading] = useState(false);
+  // const [listItems, setListItems] = useState([]);
 
 
-  useEffect(() => {
-    const initListItems = async () => {
-      setLoading(true);
-      const response = fetch(BACKEND_URL + GET_API)
-        .then(response => response.json())
-        .then(response => {
-          // console.log(response)
-            setListItems (response);
-            setLoading(false);
-        })
-      // const resJson = await response.json();
-      // console.log("resJson", resJson);
-
-
-    }
-    initListItems();
-  }, []);
-
-
-
-
-      // setLoading(true);
-      // const finalResponse = await fetch(BACKEND_URL + GET_API)
-      //   .then(response => response.json())
-      //   .then(response => {
-      //     setTasks(response.result);
-      //     return response.result;
-      //     console.log("response.result", response.result);
-      //   });
-      // const response = await fetch(BACKEND_URL + GET_API);
-      // const resJson = response.json();
-      // const result = resJson.result;
-      // console.log("response is", response.json());
-      // setTasks(response);
-      // setLoading(false);
-    // };
-    // initTasks();
-  //   return;
-  // }, []);
-
-
+  // useEffect(() => {
+  //   const initListItems = async () => {
+  //     // setLoading(true);
+  //     const response = fetch(BACKEND_URL + GET_API)
+  //       .then(response => response.json())
+  //       .then(response => {
+  //         // console.log(response)
+  //           setListItems (response);
+  //           // setLoading(false);
+  //       });
+  //   };
+  //   initListItems();
+  // }, [])
 
   return (
     <div>
-    {loading ? (
-      <h4>Loading...</h4>) :
-      <Checklist listItems={listItems} />
-  }
-  </div>
+      <Checklist  />
+    </div>
   );
-}
+};
 
 
 
 
 
 function Checklist(props) {
-  const [listItems, setListItems] = useState(props.listItems);
+  const [listItems, setListItems] = useState(props.listItems ? props.listItems : []);
 
-  function addListItem(newItem) {
-    setListItems([...listItems, newItem]);
-  }
+  // function addListItem(newItem) {
+  //   setListItems([...listItems, newItem]);
+  // }
+
+  // const listItems = props.listItems;
+  // useEffect(() => {
+  //   setListItems(props.listItems);
+  //   console.log("rendering?");
+  // }, [props.listItems]);
+  // console.log(listItems);
+
+  async function initListItems() {
+    // setLoading(true);
+    console.log("initListItems");
+    const response = fetch(BACKEND_URL + GET_API)
+      .then(response => response.json())
+      .then(response => {
+        // console.log(response)
+          setListItems (response);
+          console.log("response was", response);
+          // setLoading(false);
+      });
+  };
 
   useEffect(() => {
-    setListItems(props.listItems);
+    initListItems();
   }, [props.listItems]);
-  console.log(props);
 
+  function rerender() {
+    console.log("trying to rerender");
+    initListItems();
+  };
 
   return (
-    <ul className = "taskList">
-      {props.listItems.map((listItem) =>
+    <ul className = "checklist">
+      {listItems.map((listItem) =>
         <ListItem key={listItem.taskid} item={listItem} />
       )}
-      <li><AddListItemForm addListItem={addListItem} /></li>
+      <li><AddListItemForm rerender={rerender} /></li>
     </ul>
   );
-}
-
-function AddListItemForm( { addListItem } ) {
-  const [newListItemName, setNewListItemName] = useState();
-
-  // useEffect(() => {
-  //   setNewListItemName();
-  // }, []);
-
-  function handleSubmit( event ) {
-    // TODO: what should the taskid of a new task be, if any?
-    addListItem( { taskid: -1, name: newListItemName, completed: 0 });
-    console.log("list item added", newListItemName);
-    // what does this do?
-    event.preventDefault();
-  }
-
-  return (
-    <form onSubmit={ e => {handleSubmit(e)}}>
-      <input type="text" name="newListItemName" value={newListItemName}
-        onChange={event => setNewListItemName(event.target.value)} />
-      <input type="submit" value="Add Item" />
-    </form>
-    );
 }
 
 function ListItem(props) {
@@ -171,5 +117,38 @@ function ListItem(props) {
   );
 }
 
+function AddListItemForm(props) {
+  const [newListItemName, setNewListItemName] = useState("");
+  // const [addNewItem, setAddNewItem] = useState();
+
+  useEffect(() => {
+    setNewListItemName("default");
+  }, []);
+
+  const onChange = event => setNewListItemName(event.target.value);
+
+  async function handleSubmit( event ) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: newListItemName })
+    };
+    let response = fetch(BACKEND_URL + ADD_API, requestOptions)
+      .then(props.rerender())
+      .then( console.log("list item added", newListItemName) );
+
+    // what does this do?
+    event.preventDefault();
+    // props.rerender();
+  }
+
+  return (
+    <form onSubmit={ async () => { await handleSubmit(); }}>
+      <input type="text" name="newListItemName" value={newListItemName}
+        onChange={ onChange } />
+      <input type="submit" value="Add Item" />
+    </form>
+    );
+}
 
 export default App;
