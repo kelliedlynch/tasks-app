@@ -43,6 +43,7 @@ def delete_task():
    response.access_control_allow_origin = "*"
    response.access_control_allow_methods = ["POST", "OPTIONS"]
    response.access_control_allow_headers = ["Content-Type"]
+   print(operation, response)
    return response
 
 @app.route("/add-task", methods=["POST", "OPTIONS"])
@@ -63,6 +64,7 @@ def add_task():
    response.access_control_allow_origin = "*"
    response.access_control_allow_methods = ["POST", "OPTIONS"]
    response.access_control_allow_headers = ["Content-Type"]
+   print(operation, response)
    return response
 
 
