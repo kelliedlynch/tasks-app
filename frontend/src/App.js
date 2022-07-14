@@ -8,6 +8,7 @@ const BACKEND_URL = "http://localhost:5000/";
 const GET_API = "tasks";
 const DEL_API = "del-task";
 const ADD_API = "add-task";
+const EDIT_API = "edit-item"
 
 function App() {
 
@@ -28,7 +29,7 @@ function Checklist(props) {
       .then(response => response.json())
       .then(response => {
           setListItems (response);
-          console.log("response was", response);
+          console.log("initListItems response was", response);
           // setLoading(false);
       });
   };
@@ -45,7 +46,7 @@ function Checklist(props) {
   return (
     <ul className = "checklist">
       {listItems.map((listItem) =>
-        <ListItem key={listItem.taskid} item={listItem} rerender={rerender} />
+        <ListItem key={listItem.item_id} item={listItem} rerender={rerender} />
       )}
       <li><AddListItemForm rerender={rerender} /></li>
     </ul>
@@ -56,30 +57,36 @@ function ListItem(props) {
   const [completed, setCompleted] = useState(props.item.completed);
 
   useEffect(() => {
-    setCompleted(props.item.completed);
-  }, [props.item.completed]);
+    completeListItem();
+  }, [completed]);
 //
 
-  async function handleCheckbox () {
-    console.log("checkbox clicked");
-    if( completed === 0 ) {
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ taskid: props.item.taskid })
-      };
-      let response = await fetch(BACKEND_URL + DEL_API, requestOptions);
-      props.rerender();
-
-      console.log("list item deleted:", props.item);
+  function handleCheckbox() {
+    if( completed == 0) {
+      setCompleted(1);
+    } else {
+      setCompleted(0);
     }
+  }
+
+  function completeListItem() {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        do: "update_completed",
+        item_id: props.item.item_id,
+        completed: completed,
+         })
+      };
+      fetch(BACKEND_URL + EDIT_API, requestOptions);
   } 
 
   return (
     <li>
-      <input type="checkbox" value={props.item.completed} onClick={handleCheckbox} />
+      <input type="checkbox" checked={completed} onChange={handleCheckbox} />
       {props.item.name}
-      </li>
+    </li>
   );
 }
 

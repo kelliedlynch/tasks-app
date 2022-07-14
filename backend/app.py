@@ -25,6 +25,36 @@ app = Flask(__name__)
 #       msg = "records added"
 #    return msg
 
+@app.route("/edit-item", methods=["POST", "OPTIONS"])
+def edit_list_item():
+   operation = "preflight"
+   if request.method == "POST":
+      operation = "post"
+      query = ""
+      if request.json["do"] == "update_completed":
+         query = "UPDATE list_items SET completed=%s WHERE item_id=%s" % (request.json["completed"], request.json["item_id"])
+         print("query is", query);
+      elif request.json["do"] == "add_list_item":
+         query = "INSERT INTO list_items (name) VALUES (%s)" % [request.json["name"]]
+      elif request.json["do"] == "delete_list_item":
+         query = "DELETE FROM list_items WHERE item_id=" + request.json["item_id"]
+
+      with sql.connect("database.db") as connection:
+         cursor = connection.cursor()
+         cursor.execute(query)
+         item_id = cursor.lastrowid if not request.json["item_id"] else request.json["item_id"]
+         connection.commit()
+
+         print("db operation " + request.json["do"] + " completed on item_id " + str(item_id))
+   response = Response(operation)
+   response.access_control_allow_origin = "*"
+   response.access_control_allow_methods = ["POST", "OPTIONS"]
+   response.access_control_allow_headers = ["Content-Type"]
+   print(operation, response)
+   return response
+
+
+
 @app.route("/del-task", methods=["POST", "OPTIONS"])
 def delete_task():
 
@@ -55,7 +85,7 @@ def add_task():
       print(request.json["name"])
       with sql.connect("database.db") as con:
          cur = con.cursor()
-         cur.execute("INSERT INTO tasks (name, completed) VALUES (?, False)", [request.json["name"]] )
+         cur.execute("INSERT INTO list_items (name, completed) VALUES (?, False)", [request.json["name"]] )
          con.commit()
          operation = "inserted task"
          # con.close()
@@ -74,13 +104,13 @@ def show_tasks():
    con = sql.connect("database.db")
    con.row_factory = sql.Row
    cur = con.cursor()
-   cur.execute("select * from tasks")
+   cur.execute("select * from list_items")
    rows = cur.fetchall();
 
    query_array = []
    for row in rows:
       query_array.append ({
-         "taskid": row["taskid"],
+         "item_id": row["item_id"],
          "name": row["name"],
          "completed": row["completed"]
       })
