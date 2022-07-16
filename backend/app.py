@@ -28,73 +28,32 @@ app = Flask(__name__)
 @app.route("/edit-item", methods=["POST", "OPTIONS"])
 def edit_list_item():
    operation = "preflight"
+   response = Response()
    if request.method == "POST":
       operation = "post"
       query = ""
       if request.json["do"] == "update_completed":
          query = "UPDATE list_items SET completed=%s WHERE item_id=%s" % (request.json["completed"], request.json["item_id"])
-         print("query is", query);
       elif request.json["do"] == "add_list_item":
-         query = "INSERT INTO list_items (name) VALUES (%s)" % [request.json["name"]]
+         query = "INSERT INTO list_items (name) VALUES ('%s')" % request.json["name"]
       elif request.json["do"] == "delete_list_item":
          query = "DELETE FROM list_items WHERE item_id=" + request.json["item_id"]
+      print("query is", query);
 
       with sql.connect("database.db") as connection:
          cursor = connection.cursor()
          cursor.execute(query)
-         item_id = cursor.lastrowid if not request.json["item_id"] else request.json["item_id"]
+         item_id = cursor.lastrowid if request.json["do"] == "add_list_item" else request.json["item_id"]
+         print("db operation " + request.json["do"] + " completed on item_id " + str(item_id))
+         response.set_data(json.dumps( { "item_id": item_id, "operation": operation}))
+
          connection.commit()
 
-         print("db operation " + request.json["do"] + " completed on item_id " + str(item_id))
-   response = Response(operation)
+
    response.access_control_allow_origin = "*"
    response.access_control_allow_methods = ["POST", "OPTIONS"]
    response.access_control_allow_headers = ["Content-Type"]
-   print(operation, response)
-   return response
-
-
-
-@app.route("/del-task", methods=["POST", "OPTIONS"])
-def delete_task():
-
-   operation = "preflight"
-   if request.method == "POST":
-      # jsondict = json.load(request.json)
-      print(type(request.json["taskid"]))
-      with sql.connect("database.db") as con:
-         cur = con.cursor()
-         cur.execute("DELETE FROM tasks WHERE taskid=?", [request.json["taskid"]] )
-         con.commit()
-         operation = "deleted task"
-         # con.close()
-
-   response = Response(operation)
-   response.access_control_allow_origin = "*"
-   response.access_control_allow_methods = ["POST", "OPTIONS"]
-   response.access_control_allow_headers = ["Content-Type"]
-   print(operation, response)
-   return response
-
-@app.route("/add-task", methods=["POST", "OPTIONS"])
-def add_task():
-
-   operation = "preflight"
-   if request.method == "POST":
-      # jsondict = json.load(request.json)
-      print(request.json["name"])
-      with sql.connect("database.db") as con:
-         cur = con.cursor()
-         cur.execute("INSERT INTO list_items (name, completed) VALUES (?, False)", [request.json["name"]] )
-         con.commit()
-         operation = "inserted task"
-         # con.close()
-
-   response = Response(operation)
-   response.access_control_allow_origin = "*"
-   response.access_control_allow_methods = ["POST", "OPTIONS"]
-   response.access_control_allow_headers = ["Content-Type"]
-   print(operation, response)
+   # print(operation, response)
    return response
 
 

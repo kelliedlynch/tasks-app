@@ -20,31 +20,12 @@ function sortList( unsortedList ) {
       completeItems.push(item);
     };
   });
+  incompleteItems.sort(function(a, b){return a["item_id"] - b["item_id"]});
+  completeItems.sort(function(a, b){return a["item_id"] - b["item_id"]});
   return incompleteItems.concat(completeItems);
 }
 
 function App() {
-  // const [listItems, setListItems] = useState();
-
-  // // async function initListItems() {
-  //   // setLoading(true);
-  //   console.log("initListItems");
-  //   const response = await fetch(BACKEND_URL + GET_API);
-  //   const rawList = await response.json();
-  //   console.log("rawList", rawList);
-  //   const sortedList = sortList( rawList );
-  //   setListItems( sortedList );
-  //   // return sortedList;
-  //     // .then(response => response.json())
-  //     // .then(response => {
-  //     //     setListItems (response);
-  //     //     console.log("initListItems response was", response);
-  //     //     // setLoading(false);
-  //     // });
-  // // };
-  // // initListItems();
-  // console.log(listItems);
-
   return (
     <div>
       <Checklist />
@@ -54,24 +35,6 @@ function App() {
 
 function Checklist(props) {
   const [listItems, setListItems] = useState([]);
-
-  // async function initListItems() {
-  //   // setLoading(true);
-  //   console.log("initListItems");
-  //   const response = await fetch(BACKEND_URL + GET_API);
-  //   const rawList = await response.json();
-  //   const sortedList = sortList( rawList );
-  //   // setListItems( sortedList );
-  //   return sortedList;
-
-      // .then(response => response.json())
-      // .then(response => {
-      //     setListItems (response);
-      //     console.log("initListItems response was", response);
-      //     // setLoading(false);
-      // });
-  // };
-  // initListItems();
 
   useEffect(() => {
     async function initListItems() {
@@ -84,11 +47,7 @@ function Checklist(props) {
   }, []);
 
   async function toggleCompleted( item ) {
-    if( item.completed === 0 ) {
-      item.completed = 1;
-    } else {
-      item.completed = 0;
-    };
+    item.completed = (item.completed == 0) ? 1 : 0;
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -100,14 +59,27 @@ function Checklist(props) {
       };
       await fetch(BACKEND_URL + EDIT_API, requestOptions);
       let newItems = [...listItems];
-      console.log("newItems before update", newItems);
       newItems.forEach(thisItem => {
         if( thisItem.item_id === item.item_id ) {
           thisItem.completed = item.completed;
         }
       });
-      console.log("newItems after update", sortList(newItems));
       setListItems(sortList(newItems));
+  }
+
+  async function addListItem( item ) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        do: "add_list_item",
+        name: item.name })
+    }
+    const response = await fetch(BACKEND_URL + EDIT_API, requestOptions);
+    const content = await response.json();
+    item.item_id = content.item_id;
+    item.completed = 0;
+    setListItems(sortList([...listItems, item]));
   }
 
   return (
@@ -115,36 +87,15 @@ function Checklist(props) {
       {listItems.map((listItem) =>
         <ListItem key={listItem.item_id} listItem={listItem} toggleCompleted={toggleCompleted} />
       )}
-      <li><AddListItemForm setListItems={setListItems} /></li>
+      <li><AddListItemForm addListItem={addListItem} /></li>
     </ul>
   );
 }
 
 function ListItem( props ) {
-  // const [listItem, setListItem] = useState(props.item);
-  // const [completed, setCompleted] = useState(props.item.completed);
-  // const item_id = props.item.item_id;
-
-  useEffect(() => {
-    // function completeListItem() {
-    //   const requestOptions = {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({
-    //       do: "update_completed",
-    //       item_id: listItem.item_id,
-    //       completed: listItem.completed,
-    //        })
-    //     };
-    //     fetch(BACKEND_URL + EDIT_API, requestOptions);
-    // }
-    // completeListItem();
-  }, );
-//
 
   function handleCheckbox() {
     props.toggleCompleted( props.listItem );
-    // props.rerender();
   }
 
   return (
@@ -157,7 +108,6 @@ function ListItem( props ) {
 
 function AddListItemForm(props) {
   const [newListItemName, setNewListItemName] = useState("");
-  // const [addNewItem, setAddNewItem] = useState();
 
   useEffect(() => {
     setNewListItemName("");
@@ -167,17 +117,12 @@ function AddListItemForm(props) {
   const submitOnEnter = event => { if( event.key === "Enter" ) handleSubmit(); }
 
   async function handleSubmit( event ) {
-    console.log("handleSubmit", event);
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: newListItemName })
-    };
-
-    await fetch(BACKEND_URL + ADD_API, requestOptions);
-    props.rerender();
+    if(newListItemName === "") { return };
+    const newListItem = {
+      name: newListItemName,
+    }
+    props.addListItem( newListItem );
     setNewListItemName("");
-
   }
 
   return (
