@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
+import Button from "react-bootstrap/Button";
+import ListGroup from "react-bootstrap/ListGroup";
+import Form from "react-bootstrap/Form";
+import Dropdown from "react-bootstrap/Dropdown";
 
 const BACKEND_URL = "http://localhost:5000/";
-const GET_API = "tasks";
+const GET_API = "get-items";
+const GET_LISTS_API = "get-lists";
 const EDIT_API = "edit-item"
 
 function sortList( unsortedList ) {
@@ -22,23 +28,54 @@ function sortList( unsortedList ) {
 function App() {
   return (
     <div className="container-sm">
-      <Checklist />
+
+      <Checklist listId="1" />
     </div>
   );
 };
 
 function Checklist(props) {
+  const isMounted = useRef(false);
+  console.log("isMounted set to", isMounted.current);
+  // const [listName, setListName] = useState("")
+  // const [currentListId, setCurrentListId] = useState(0);
+  const [currentList, setCurrentList] = useState({});
   const [listItems, setListItems] = useState([]);
-
+  const [allLists, setAllLists] = useState([]);
+  // const [listId, setListId] = useState("");
+  // setListId(props.listId);
+  // console.log(listId)
   useEffect(() => {
-    async function initListItems() {
-      const response = await fetch(BACKEND_URL + GET_API);
-      const rawList = await response.json();
-      const sortedList = sortList( rawList );
-      setListItems(sortedList);
+    async function initLists() {
+      const response = await fetch(BACKEND_URL + GET_LISTS_API );
+      const rawAllLists = await response.json();
+      rawAllLists.forEach( list => {
+        if( list.default == 1 ) {
+          console.log("list is", list);
+          setCurrentList( list );
+        }
+      })
+      setAllLists(rawAllLists);
     }
-    initListItems();
+    initLists();
   }, []);
+  useEffect(() => {
+    console.log("currentList is", currentList);
+    if(isMounted.current) {
+      console.log("currently true", isMounted.current);
+      async function initListItems() {
+        const response = await fetch(BACKEND_URL + GET_API + "/" + currentList["id"] );
+        const rawList = await response.json();
+        const sortedList = sortList( rawList );
+        setListItems(sortedList);
+      }
+      initListItems();
+    } else {
+      console.log("currently false");
+      isMounted.current = true;
+    }
+  }, [currentList]);
+
 
   async function toggleCompleted( item ) {
     item.completed = (item.completed === 0) ? 1 : 0;
@@ -76,15 +113,40 @@ function Checklist(props) {
     setListItems(sortList([...listItems, item]));
   }
 
+  let otherLists = []
+  allLists.forEach(thisList => {
+    if(thisList.id != currentList.id) {
+      otherLists.push(thisList);
+    };
+  });
+
   return (
-    <ul className="list-group">
+    <>
+    <ListSelector lists={otherLists} currentList={currentList} />
+    <ListGroup>
       {listItems.map((listItem) =>
+
         <ListItem key={listItem.item_id} listItem={listItem} toggleCompleted={toggleCompleted} />
       )}
       <li className="list-group-item"><AddListItemForm addListItem={addListItem} /></li>
-    </ul>
+    </ListGroup>
+    </>
   );
 }
+
+function ListSelector( props ) {
+  return (
+    <Dropdown>
+      <Dropdown.Toggle variant="success" id="dropdown-basic">{props.currentList["name"]}</Dropdown.Toggle>
+      <Dropdown.Menu>
+        {props.lists.map((list) =>
+          <Dropdown.Item key={list.id} href="">{list.name}</Dropdown.Item>
+        )}
+      </Dropdown.Menu>
+    </Dropdown>
+  );
+}
+
 
 function ListItem( props ) {
 
@@ -92,17 +154,20 @@ function ListItem( props ) {
     props.toggleCompleted( props.listItem );
   }
 
-  let liClass = "list-group-item";
-  if(props.listItem.completed) { liClass += " disabled"};
+  let labelClass = "form-check-label";
+  if(props.listItem.completed) { labelClass += " text-decoration-line-through"};
 
   return (
-    <li className={liClass}>
-      <div class="form-check">
-        <input type="checkbox" className="form-check-input" onChange={handleCheckbox}
-          checked={props.listItem.completed} id={props.key} />
-        <label class="form-check-label" for={props.key}>{props.listItem.name}</label>
-      </div>
-    </li>
+    <ListGroup.Item>
+      <Form>
+        <Form.Group className="mb-3" controlId="formItemCheckbox">
+          <Form.Check inline type="checkbox" onChange={handleCheckbox}
+            checked={props.listItem.completed} />
+          <Form.Label bsPrefix={props.listItem.completed ? "text-decoration-line-through form-label" : ""}>
+            {props.listItem.name}</Form.Label>
+        </Form.Group>
+      </Form>
+    </ListGroup.Item>
   );
 }
 
@@ -131,8 +196,7 @@ function AddListItemForm(props) {
         <input type="text" className="form-control" placeholder="Add an item"
           value={newListItemName} id="listItemInput" onChange={ onChange }
           onKeyPress={ submitOnEnter }/>
-        <button type="button" class="btn btn-secondary" onClick={handleSubmit}>
-          Add Item </button>
+        <Button variant="secondary" onClick={handleSubmit}>Add Item</Button>
       </div>
     </>
   );

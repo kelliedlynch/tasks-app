@@ -56,14 +56,34 @@ def edit_list_item():
    # print(operation, response)
    return response
 
+@app.get("/get-lists")
+def get_all_lists():
+   con = sql.connect("database.db")
+   con.row_factory = sql.Row
+   cur = con.cursor()
+   cur.execute("SELECT * FROM lists" )
+   rows = cur.fetchall();
 
-@app.get("/tasks")
-def show_tasks():
+   query_array = []
+   for row in rows:
+      query_array.append ({
+         "id": row["list_id"],
+         "name": row["list_name"],
+         "default": row["default"]
+         })
+   query_results = jsonify(query_array)
+   query_results.headers.add('Access-Control-Allow-Origin', '*')
+   print(query_array)
+   return query_results
+
+
+@app.get("/get-items/<listId>")
+def get_list_items( listId ):
 
    con = sql.connect("database.db")
    con.row_factory = sql.Row
    cur = con.cursor()
-   cur.execute("select * from list_items")
+   cur.execute("SELECT * FROM list_items WHERE list_id=%s" % listId )
    rows = cur.fetchall();
 
    query_array = []
