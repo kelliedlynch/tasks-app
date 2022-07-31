@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
 import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
 
 const BACKEND_URL = "http://localhost:5000/";
 const GET_API = "get-items";
@@ -98,14 +99,27 @@ function Checklist(props) {
       setListItems(sortList(newItems));
   }
 
+  function changeList( id ) {
+    console.log("inside changeList");
+    allLists.some( thisList => {
+      if( id == thisList.id ) {
+        setCurrentList(thisList);
+        return true;
+      }
+    });
+  }
+
+
   async function addListItem( item ) {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         do: "add_list_item",
-        name: item.name })
+        name: item.name,
+        list_id: item.id })
     }
+    console.log("request looks like", requestOptions);
     const response = await fetch(BACKEND_URL + EDIT_API, requestOptions);
     const content = await response.json();
     item.item_id = content.item_id;
@@ -122,27 +136,31 @@ function Checklist(props) {
 
   return (
     <>
-    <ListSelector lists={otherLists} currentList={currentList} />
+    <ListSelector lists={otherLists} currentList={currentList} changeList={changeList} />
     <ListGroup>
       {listItems.map((listItem) =>
 
         <ListItem key={listItem.item_id} listItem={listItem} toggleCompleted={toggleCompleted} />
       )}
-      <li className="list-group-item"><AddListItemForm addListItem={addListItem} /></li>
+      <li className="list-group-item"><AddListItemForm addListItem={addListItem} listId={currentList.id} /></li>
     </ListGroup>
     </>
   );
 }
 
 function ListSelector( props ) {
+  function handleListChange(key) {
+    console.log("key is", key);
+    props.changeList( key );
+  }
+
   return (
     <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic">{props.currentList["name"]}</Dropdown.Toggle>
-      <Dropdown.Menu>
+      <DropdownButton id="dropdown-basic-button" title={props.currentList.name} onSelect={handleListChange}>
         {props.lists.map((list) =>
-          <Dropdown.Item key={list.id} href="">{list.name}</Dropdown.Item>
+          <Dropdown.Item eventKey={list.id} >{list.name}</Dropdown.Item>
         )}
-      </Dropdown.Menu>
+      </DropdownButton>
     </Dropdown>
   );
 }
@@ -185,6 +203,7 @@ function AddListItemForm(props) {
     if(newListItemName === "") { return };
     const newListItem = {
       name: newListItemName,
+      id: props.listId,
     }
     props.addListItem( newListItem );
     setNewListItemName("");
