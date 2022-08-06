@@ -11,3 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.item-menu-button {
+  float:  right;
+}
+
+.item-menu-button button {
+  margin-right: 0.3em;
+}
+.item-menu-button button:last-child {
+  margin-right: 0;
+}
