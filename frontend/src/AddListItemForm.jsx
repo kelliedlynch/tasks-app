@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 
 function AddListItemForm(props) {
@@ -24,12 +26,15 @@ function AddListItemForm(props) {
 
   return (
     <>
-      <div className="input-group mb-3">
-        <input type="text" className="form-control" placeholder="Add an item"
-          value={newListItemName} id="listItemInput" onChange={ onChange }
-          onKeyPress={ submitOnEnter }/>
+      <InputGroup>
+        <Form.Control type="text"
+          placeholder="Add an item"
+          value={newListItemName}
+          id="listItemInput"
+          onChange={onChange}
+          onKeyPress={submitOnEnter} />
         <Button variant="secondary" onClick={handleSubmit}>Add Item</Button>
-      </div>
+      </InputGroup>
     </>
   );
 }

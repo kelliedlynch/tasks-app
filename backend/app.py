@@ -35,6 +35,8 @@ def edit_list_item():
       print(request.json)
       if request.json["do"] == "update_completed":
          query = "UPDATE list_items SET completed=%s WHERE item_id=%s" % (request.json["completed"], request.json["item_id"])
+      elif request.json["do"] == "update_name":
+         query = "UPDATE list_items SET name='%s' WHERE item_id=%s" % (request.json["name"], request.json["item_id"])
       elif request.json["do"] == "add_list_item":
          query = "INSERT INTO list_items (name, list_id) VALUES ('%s', '%s')" % (request.json["name"], request.json["list_id"])
       elif request.json["do"] == "delete_list_item":

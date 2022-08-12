@@ -22,3 +22,7 @@ code {
 .item-menu-button button:last-child {
   margin-right: 0;
 }
+
+.hidden {
+  display:  none !important;
+}

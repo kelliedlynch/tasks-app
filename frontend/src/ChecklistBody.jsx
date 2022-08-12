@@ -17,9 +17,9 @@ function ChecklistBody(props) {
   const [listItems, setListItems] = useState([]);
 
   useEffect(() => {
-    console.log("currentList is", props.currentList);
+    // console.log("currentList is", props.currentList);
     if(isMounted.current) {
-      console.log("currently true", isMounted.current);
+      // console.log("currently true", isMounted.current);
       async function initListItems() {
         const response = await fetch(BACKEND_URL + GET_API + "/" + props.currentList["id"] );
         const rawList = await response.json();
@@ -28,21 +28,33 @@ function ChecklistBody(props) {
       }
       initListItems();
     } else {
-      console.log("currently false");
+      // console.log("currently false");
       isMounted.current = true;
     }
   }, [props.currentList]);
 
-  // async function toggleCompleted( item ) {
-  //   let newItems = [...listItems];
-  //   newItems.forEach(thisItem => {
-  //     if( thisItem.item_id === item.item_id ) {
-  //       thisItem.completed = item.completed;
-  //     }
-  //   });
-  //   setListItems(sortList(newItems));
-  // }
+  function listItemWasToggled(itemId) {
+    let updatedItems = listItems;
+    for ( let i=0; i<updatedItems.length; i++ ) {
+      if( updatedItems[i].item_id === itemId ) {
+        updatedItems[i].completed = (updatedItems[i].completed ? 0 : 1);
+        break;
+      }
+    }
+    setListItems(sortList(updatedItems));
+  }
 
+  function listItemWasDeleted(itemId) {
+    let updatedItems = []
+    listItems.forEach( listItem => {
+        if( listItem.item_id !== itemId ) {
+          updatedItems.push(listItem);
+        }
+    })
+    setListItems(updatedItems);
+  }
+
+  // TODO: should add/remove functions belong to the add form/listItem?
   async function addListItem( item ) {
     const requestOptions = {
       method: 'POST',
@@ -60,52 +72,22 @@ function ChecklistBody(props) {
     setListItems(sortList([...listItems, item]));
   }
 
-  async function deleteListItem( item ) {
-    console.log("item to be deleted", item )
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        do: "delete_list_item",
-        item_id: item.item_id,
-      })
-    }
-    console.log("request looks like", requestOptions);
-    await fetch(BACKEND_URL + EDIT_API, requestOptions);
-    // const itemIndex = listItems.indexOf(item);
-    const updatedListItems = listItems.filter(thisItem => thisItem !== item);
-    setListItems(updatedListItems);
-  }
 
-  async function toggleCompleted( item ) {
-    item.completed = (item.completed === 0) ? 1 : 0;
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        do: "update_completed",
-        item_id: item.item_id,
-        completed: item.completed,
-         })
-      };
-      await fetch(BACKEND_URL + EDIT_API, requestOptions);
 
-    let newItems = [...listItems];
-    newItems.forEach(thisItem => {
-      if( thisItem.item_id === item.item_id ) {
-        thisItem.completed = item.completed;
-      }
-    });
-    setListItems(sortList(newItems));
-      // props.toggleCompleted( item );
-  }
+
 
   return (
     <>
     <ListGroup>
       {listItems.map((listItem) =>
-
-        <ListItem key={listItem.item_id} listItem={listItem} toggleCompleted={toggleCompleted} deleteItem={deleteListItem} />
+        <ListItem
+        key={listItem.item_id}
+        name={listItem.name}
+        itemId={listItem.item_id}
+        completed={listItem.completed}
+        toggle={listItemWasToggled}
+        delete={listItemWasDeleted}
+        />
       )}
       <li className="list-group-item"><AddListItemForm addListItem={addListItem} listId={props.currentList.id} /></li>
     </ListGroup>

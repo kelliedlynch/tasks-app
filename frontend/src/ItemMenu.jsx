@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 
 import Button from "react-bootstrap/Button";
 
+const BACKEND_URL = "http://localhost:5000/";
+const EDIT_API = "edit-item"
+
 function ItemMenu(props) {
   const [itemMenuButtons, setItemMenuButtons] = useState([]);
 
@@ -12,19 +15,31 @@ function ItemMenu(props) {
     }]);
   }, []);
 
-  function deleteItem() {
-    props.deleteItem();
+  async function deleteListItem() {
+    console.log("item to be deleted", props.itemId )
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        do: "delete_list_item",
+        item_id: props.itemId,
+      })
+    }
+    console.log("request looks like", requestOptions);
+    await fetch(BACKEND_URL + EDIT_API, requestOptions);
+
+    props.delete()
   }
 
   function editItem() {
-
+    props.edit();
   }
 
   function showItemMenu() {
     setItemMenuButtons([{
       variant: "danger",
       text: "Delete",
-      action: deleteItem,
+      action: deleteListItem,
     },
     {
       variant: "primary",

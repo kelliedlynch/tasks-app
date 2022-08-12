@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import DropdownButton from "react-bootstrap/DropdownButton";
-import Dropdown from "react-bootstrap/Dropdown";
-
+import ListSelector from "./ListSelector";
 import ChecklistBody from "./ChecklistBody";
-
 
 const BACKEND_URL = "http://localhost:5000/";
 const GET_API = "get-items";
@@ -25,7 +22,7 @@ function App() {
       const rawAllLists = await response.json();
       rawAllLists.some( list => {
         if( list.default === 1 ) {
-          console.log("list is", list);
+          // console.log("list is", list);
           setCurrentList( list );
           return true;
         }
@@ -39,7 +36,7 @@ function App() {
   function changeList( id ) {
     console.log("inside changeList");
     allLists.some( thisList => {
-      console.log(typeof id, typeof thisList.id);
+      // console.log(id, thisList.id);
       if( id === thisList.id ) {
         setCurrentList(thisList);
         return true;
@@ -64,30 +61,5 @@ function App() {
     </div>
   );
 };
-
-
-function ListSelector( props ) {
-  function handleListChange(key) {
-    console.log("key is", key);
-    props.changeList( +key );
-  }
-
-  return (
-    <Dropdown>
-      <DropdownButton id="dropdown-basic-button" size="lg" title={props.currentList.name} onSelect={handleListChange}>
-        {props.lists.map((list) =>
-          <Dropdown.Item key={list.id} eventKey={list.id} >{list.name}</Dropdown.Item>
-        )}
-      </DropdownButton>
-    </Dropdown>
-  );
-}
-
-
-
-
-
-
-
 
 export default App;
