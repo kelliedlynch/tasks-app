@@ -6,58 +6,26 @@ import ChecklistBody from "./ChecklistBody";
 const BACKEND_URL = "http://localhost:5000/";
 const GET_API = "get-items";
 const GET_LISTS_API = "get-lists";
-const EDIT_API = "edit-item"
+const EDIT_API = "edit"
 
 
 function App() {
+  const [currentListId, setCurrentListId] = useState(0);
 
-
-  const [currentList, setCurrentList] = useState({ name: "Loading"});
-  //
-  const [allLists, setAllLists] = useState([]);
-
-  useEffect(() => {
-    async function initLists() {
-      const response = await fetch(BACKEND_URL + GET_LISTS_API );
-      const rawAllLists = await response.json();
-      rawAllLists.some( list => {
-        if( list.default === 1 ) {
-          // console.log("list is", list);
-          setCurrentList( list );
-          return true;
-        }
-        return false;
-      })
-      setAllLists(rawAllLists);
-    }
-    initLists();
-  }, []);
-
-  function changeList( id ) {
-    console.log("inside changeList");
-    allLists.some( thisList => {
-      // console.log(id, thisList.id);
-      if( id === thisList.id ) {
-        setCurrentList(thisList);
-        return true;
-      }
-      return false;
-    });
+  function currentListWasChanged(listId) {
+    setCurrentListId(listId);
   }
+  // async function updateCurrentList(newListData) {
+  //   console.log("newListData", newListData);
+  //   setCurrentList(newListData);
+  // }
 
 
-
-  let otherLists = []
-  allLists.forEach(thisList => {
-    if(thisList.id !== currentList.id) {
-      otherLists.push(thisList);
-    };
-  });
 
   return (
     <div className="container-sm">
-      <ListSelector lists={otherLists} currentList={currentList} changeList={changeList} />
-      <ChecklistBody currentList={currentList} />
+      <ListSelector currentListId={currentListId} changeList={currentListWasChanged} />
+      <ChecklistBody currentListId={currentListId} changeList={currentListWasChanged} />
     </div>
   );
 };

@@ -26,3 +26,7 @@ code {
 .hidden {
   display:  none !important;
 }
+
+.list-selector {
+  min-width: 50%;
+}

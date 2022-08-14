@@ -4,12 +4,9 @@ import ListGroup from "react-bootstrap/ListGroup";
 
 import ListItem from "./ListItem";
 import AddListItemForm from "./AddListItemForm";
-import sortList from "./Utility";
+import { BACKEND_URL, EDIT_API, GET_API, GET_LISTS_API, sortList } from "./Utility";
 
-const BACKEND_URL = "http://localhost:5000/";
-const GET_API = "get-items";
-const GET_LISTS_API = "get-lists";
-const EDIT_API = "edit-item"
+
 
 function ChecklistBody(props) {
   const isMounted = useRef(false);
@@ -21,7 +18,7 @@ function ChecklistBody(props) {
     if(isMounted.current) {
       // console.log("currently true", isMounted.current);
       async function initListItems() {
-        const response = await fetch(BACKEND_URL + GET_API + "/" + props.currentList["id"] );
+        const response = await fetch(BACKEND_URL + GET_API + "/" + props.currentListId );
         const rawList = await response.json();
         const sortedList = sortList( rawList );
         setListItems(sortedList);
@@ -31,7 +28,7 @@ function ChecklistBody(props) {
       // console.log("currently false");
       isMounted.current = true;
     }
-  }, [props.currentList]);
+  }, [props.currentListId]);
 
   function listItemWasToggled(itemId) {
     let updatedItems = listItems;
@@ -89,7 +86,7 @@ function ChecklistBody(props) {
         delete={listItemWasDeleted}
         />
       )}
-      <li className="list-group-item"><AddListItemForm addListItem={addListItem} listId={props.currentList.id} /></li>
+      <li className="list-group-item"><AddListItemForm addListItem={addListItem} listId={props.currentListId} /></li>
     </ListGroup>
     </>
   );

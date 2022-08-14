@@ -1,4 +1,9 @@
-function sortList( unsortedList ) {
+export const BACKEND_URL = "http://localhost:5000/";
+export const GET_API = "get-items";
+export const GET_LISTS_API = "get-lists";
+export const EDIT_API = "edit"
+
+export function sortList( unsortedList ) {
   let incompleteItems = [];
   let completeItems = [];
   unsortedList.forEach( item => {
@@ -13,4 +18,3 @@ function sortList( unsortedList ) {
   return incompleteItems.concat(completeItems);
 }
 
-export default sortList;

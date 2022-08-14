@@ -25,7 +25,7 @@ app = Flask(__name__)
 #       msg = "records added"
 #    return msg
 
-@app.route("/edit-item", methods=["POST", "OPTIONS"])
+@app.route("/edit", methods=["POST", "OPTIONS"])
 def edit_list_item():
    operation = "preflight"
    response = Response()
@@ -35,22 +35,27 @@ def edit_list_item():
       print(request.json)
       if request.json["do"] == "update_completed":
          query = "UPDATE list_items SET completed=%s WHERE item_id=%s" % (request.json["completed"], request.json["item_id"])
-      elif request.json["do"] == "update_name":
+      elif request.json["do"] == "update_item_name":
          query = "UPDATE list_items SET name='%s' WHERE item_id=%s" % (request.json["name"], request.json["item_id"])
       elif request.json["do"] == "add_list_item":
          query = "INSERT INTO list_items (name, list_id) VALUES ('%s', '%s')" % (request.json["name"], request.json["list_id"])
       elif request.json["do"] == "delete_list_item":
          query = "DELETE FROM list_items WHERE item_id=%s" % request.json["item_id"]
+      elif request.json["do"] == "update_list_name":
+         query = "UPDATE lists SET list_name='%s' WHERE list_id=%s" % (request.json["name"], request.json["list_id"])
       print("query is", query);
 
       with sql.connect("database.db") as connection:
          cursor = connection.cursor()
          cursor.execute(query)
-         item_id = cursor.lastrowid if request.json["do"] == "add_list_item" else request.json["item_id"]
-         print("db operation " + request.json["do"] + " completed on item_id " + str(item_id))
-         response.set_data(json.dumps( { "item_id": item_id, "operation": operation}))
+         if(request.json["do"] != "update_list_name"):
+            item_id = cursor.lastrowid if request.json["do"] == "add_list_item" else request.json["item_id"]
+            print("db operation " + request.json["do"] + " completed on item_id " + str(item_id))
+            response.set_data(json.dumps( { "item_id": item_id, "operation": operation}))
 
          connection.commit()
+
+
 
 
    response.access_control_allow_origin = "*"

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import Button from "react-bootstrap/Button";
 
-const BACKEND_URL = "http://localhost:5000/";
-const EDIT_API = "edit-item"
+import { BACKEND_URL, EDIT_API } from "./Utility";
 
 function ItemMenu(props) {
   const [itemMenuButtons, setItemMenuButtons] = useState([]);

@@ -8,8 +8,7 @@ import Container from "react-bootstrap/Container";
 
 import ItemMenu from "./ItemMenu";
 
-const BACKEND_URL = "http://localhost:5000/";
-const EDIT_API = "edit-item"
+import { BACKEND_URL, EDIT_API } from "./Utility";
 
 function ListItem( props ) {
   const [editName, setEditName] = useState(false);
@@ -75,7 +74,7 @@ function ListItem( props ) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        do: "update_name",
+        do: "update_item_name",
         item_id: listItem.item_id,
         name: name,
          })
@@ -90,12 +89,6 @@ function ListItem( props ) {
 
   function deleteThisItem() {
     props.delete( listItem.item_id );
-  }
-
-  function stopLabelPropagation(event) {
-    event.preventDefault();
-    focusItemName();
-    // event.stopPropagation();
   }
 
   return (
