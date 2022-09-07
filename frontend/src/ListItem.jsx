@@ -10,6 +10,8 @@ import ItemMenu from "./ItemMenu";
 
 import { BACKEND_URL, EDIT_API } from "./Utility";
 
+// console.log("ListItem loaded");
+
 function ListItem( props ) {
   const [editName, setEditName] = useState(false);
   const [listItem, setListItem] = useState({

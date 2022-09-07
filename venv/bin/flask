@@ -1,4 +1,6 @@
-#!/Users/kellielynch/Documents/src/tasks-app/venv/bin/python3
+#!/bin/sh
+'''exec' "/Users/kellie/Library/Mobile Documents/com~apple~CloudDocs/Coding/tasks-app/venv/bin/python3.10" "$0" "$@"
+' '''
 # -*- coding: utf-8 -*-
 import re
 import sys

@@ -5,6 +5,8 @@ import json
 import sqlite3 as sql
 
 app = Flask(__name__)
+app.debug = True
+print("app is running")
 
 # Database structure:
 # table: tasks
@@ -66,6 +68,7 @@ def edit_list_item():
 
 @app.get("/get-lists")
 def get_all_lists():
+   print("get-lists", flush=True)
    con = sql.connect("database.db")
    con.row_factory = sql.Row
    cur = con.cursor()
@@ -75,9 +78,9 @@ def get_all_lists():
    query_array = []
    for row in rows:
       query_array.append ({
-         "id": row["list_id"],
-         "name": row["list_name"],
-         "default": row["default"]
+         "listId": row["list_id"],
+         "listName": row["list_name"],
+         "isDefault": row["default"]
          })
    query_results = jsonify(query_array)
    query_results.headers.add('Access-Control-Allow-Origin', '*')
@@ -87,6 +90,7 @@ def get_all_lists():
 
 @app.get("/get-items/<listId>")
 def get_list_items( listId ):
+   print("get-items", flush=True)
 
    con = sql.connect("database.db")
    con.row_factory = sql.Row
@@ -97,8 +101,8 @@ def get_list_items( listId ):
    query_array = []
    for row in rows:
       query_array.append ({
-         "item_id": row["item_id"],
-         "name": row["name"],
+         "itemId": row["item_id"],
+         "itemName": row["name"],
          "completed": row["completed"]
       })
    query_results = jsonify(query_array)

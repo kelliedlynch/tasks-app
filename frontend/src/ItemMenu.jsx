@@ -4,6 +4,8 @@ import Button from "react-bootstrap/Button";
 
 import { BACKEND_URL, EDIT_API } from "./Utility";
 
+// console.log("ItemMenu loaded");
+
 function ItemMenu(props) {
   const [itemMenuButtons, setItemMenuButtons] = useState([]);
 

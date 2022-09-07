@@ -4,19 +4,28 @@ import ListGroup from "react-bootstrap/ListGroup";
 
 import ListItem from "./ListItem";
 import AddListItemForm from "./AddListItemForm";
-import { BACKEND_URL, EDIT_API, GET_API, GET_LISTS_API, sortList } from "./Utility";
+import { BACKEND_URL, EDIT_API, GET_API, sortList } from "./Utility"; 
 
-
+// console.log("ChecklistBody loaded");
 
 function ChecklistBody(props) {
   const isMounted = useRef(false);
 
   const [listItems, setListItems] = useState([]);
 
+  // let currentListId;
+  // useEffect(() => {
+  //   console.log("checking props.currentListId", props.currentListId);
+  //   if(props.currentListId !== undefined) {
+  //     currentListId = props.currentListId;
+  //   };
+  // });
+
   useEffect(() => {
+    console.log("useEffect triggered on currentListId");
     // console.log("currentList is", props.currentList);
-    if(isMounted.current) {
-      // console.log("currently true", isMounted.current);
+    if(isMounted.current && props.currentListId !== undefined) {
+      console.log("loading checklist items");
       async function initListItems() {
         const response = await fetch(BACKEND_URL + GET_API + "/" + props.currentListId );
         const rawList = await response.json();
@@ -78,9 +87,9 @@ function ChecklistBody(props) {
     <ListGroup>
       {listItems.map((listItem) =>
         <ListItem
-        key={listItem.item_id}
-        name={listItem.name}
-        itemId={listItem.item_id}
+        key={listItem.itemId}
+        name={listItem.itemName}
+        itemId={listItem.itemId}
         completed={listItem.completed}
         toggle={listItemWasToggled}
         delete={listItemWasDeleted}

@@ -1,7 +1,9 @@
-export const BACKEND_URL = "http://localhost:5000/";
+export const BACKEND_URL = "http://localhost:5001/";
 export const GET_API = "get-items";
 export const GET_LISTS_API = "get-lists";
 export const EDIT_API = "edit"
+
+// console.log("Utility loaded");
 
 export function sortList( unsortedList ) {
   let incompleteItems = [];

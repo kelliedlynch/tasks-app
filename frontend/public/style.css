@@ -1,0 +1,66 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: Helvetica, Arial, sans-serif;
+}
+#businesscard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -100px;
+  margin-left: -185px;
+  width: 370px;
+  height: 200px;
+  border: 1px solid black;
+  background: white;
+}
+#bcname {
+  margin-top: 75px;
+  margin-bottom: 5px;
+  font-size: 18px;
+  text-align: center;
+}
+#bctitle {
+  margin-top: 5px;
+  font-size: 13px;
+  text-align: center;
+}
+#titleboxes {
+  height: 25px;
+  list-style: none;
+  margin-left: 102px;
+  margin-top: 20px;
+}
+#titleboxes li {
+  float: left;
+  height: 25px;
+  width: 25px;
+  overflow: hidden;
+}
+#titleboxes a {
+  float: left;
+  height: 25px;
+  width: 25px;
+  overflow: hidden;
+}
+#titleboxes li#writer {
+  background-color: #039;
+  margin-right: 10px;
+}
+#titleboxes li#artist {
+  background-color: #969;
+  margin-right: 10px;
+}
+#titleboxes li#grapefruit {
+  background-color: #fcf;
+  margin-right: 10px;
+}
+#titleboxes li#editor {
+  background-color: #c33;
+  margin-right: 10px;
+}
+#titleboxes li#webdeveloper {
+  background-color: #f93;
+}

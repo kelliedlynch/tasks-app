@@ -1,0 +1,2 @@
+export FLASK_RUN_PORT=5001
+export FLASK_DEBUG=1
