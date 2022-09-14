@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import Button from "react-bootstrap/Button";
 
-import { BACKEND_URL, EDIT_API } from "./Utility";
+import { BACKEND_URL, EDIT_ITEM_API } from "./Utility";
 
 // console.log("ItemMenu loaded");
 
@@ -27,7 +27,7 @@ function ItemMenu(props) {
       })
     }
     console.log("request looks like", requestOptions);
-    await fetch(BACKEND_URL + EDIT_API, requestOptions);
+    await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
 
     props.delete()
   }

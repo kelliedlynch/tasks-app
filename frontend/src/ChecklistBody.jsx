@@ -4,7 +4,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 
 import ListItem from "./ListItem";
 import AddListItemForm from "./AddListItemForm";
-import { BACKEND_URL, EDIT_API, GET_API, sortList } from "./Utility"; 
+import { BACKEND_URL, EDIT_ITEM_API, GET_API, sortList } from "./Utility"; 
 
 // console.log("ChecklistBody loaded");
 
@@ -71,7 +71,7 @@ function ChecklistBody(props) {
         list_id: item.id })
     }
     console.log("request looks like", requestOptions);
-    const response = await fetch(BACKEND_URL + EDIT_API, requestOptions);
+    const response = await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
     const content = await response.json();
     item.item_id = content.item_id;
     item.completed = 0;

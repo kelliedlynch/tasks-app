@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import ListSelector from "./ListSelector";
 import ChecklistBody from "./ChecklistBody";
-import { BACKEND_URL, GET_LISTS_API  } from "./Utility";  
+import { BACKEND_URL, GET_LISTS_API, EDIT_LIST_API  } from "./Utility";  
 
 
 
@@ -42,6 +42,10 @@ function App() {
     initLists();
   }, []);
 
+  useEffect(() => {
+
+  }, [currentListId]);
+
   // useEffect(() => {
   //   if(isMounted.current) {
   //     console.log("loading currentList items");
@@ -67,11 +71,47 @@ function App() {
   //   setCurrentList(newListData);
   // }
 
+  async function createNewList(name) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        do: "create_new_list",
+        list_name: name,
+      }),
+    }
+
+    const response = await fetch(BACKEND_URL + EDIT_LIST_API, requestOptions);
+    const content = await response.json();
+    // let newList = {
+    //   listId: content.list_id,
+    //   listName: name,
+    // }
+    setCurrentListId(content.list_id);
+  }
+
+
+  // async function addListItem( item ) {
+  //   const requestOptions = {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({
+  //       do: "add_list_item",
+  //       name: item.name,
+  //       list_id: item.id })
+  //   }
+  //   console.log("request looks like", requestOptions);
+  //   const response = await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
+  //   const content = await response.json();
+  //   item.item_id = content.item_id;
+  //   item.completed = 0;
+  //   setListItems(sortList([...listItems, item]));
+  // }
 
 
   return (
     <div className="container-sm">
-      <ListSelector currentListId={currentListId} changeList={currentListWasChanged} />
+      <ListSelector currentListId={currentListId} changeList={currentListWasChanged} createNewList={createNewList} />
       <ChecklistBody currentListId={currentListId} />
     </div>
   );

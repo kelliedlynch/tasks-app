@@ -8,7 +8,7 @@ import Container from "react-bootstrap/Container";
 
 import ItemMenu from "./ItemMenu";
 
-import { BACKEND_URL, EDIT_API } from "./Utility";
+import { BACKEND_URL, EDIT_ITEM_API } from "./Utility";
 
 // console.log("ListItem loaded");
 
@@ -64,7 +64,7 @@ function ListItem( props ) {
         completed: updatedItem.completed,
          })
       };
-    await fetch(BACKEND_URL + EDIT_API, requestOptions);
+    await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
     setListItem(updatedItem)
 
     props.toggle(updatedItem.item_id);
@@ -81,7 +81,7 @@ function ListItem( props ) {
         name: name,
          })
       };
-      await fetch(BACKEND_URL + EDIT_API, requestOptions);
+      await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
       let updatedItem = listItem;
       updatedItem.name = name;
       console.log("new list item", updatedItem);

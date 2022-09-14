@@ -27,7 +27,7 @@ print("app is running")
 #       msg = "records added"
 #    return msg
 
-@app.route("/edit", methods=["POST", "OPTIONS"])
+@app.route("/edit-item", methods=["POST", "OPTIONS"])
 def edit_list_item():
    operation = "preflight"
    response = Response()
@@ -57,14 +57,38 @@ def edit_list_item():
 
          connection.commit()
 
+   response.access_control_allow_origin = "*"
+   response.access_control_allow_methods = ["POST", "OPTIONS"]
+   response.access_control_allow_headers = ["Content-Type"]
+   # print(operation, response)
+   return response
 
+@app.route("/edit-list", methods=["POST", "OPTIONS"])
+def edit_list():
+   operation = "preflight"
+   response = Response()
+   if request.method == "POST":
+      operation = "post"
+      query = ""
+      print(request.json)
+      if request.json["do"] == "create_new_list":
+         query = "INSERT INTO lists (list_name) VALUES ('%s')" % (request.json["list_name"])
 
+      with sql.connect("database.db") as connection:
+         cursor = connection.cursor()
+         cursor.execute(query)
+         if(request.json["do"] == "create_new_list"):
+            list_id = cursor.lastrowid
+            response.set_data(json.dumps( { "list_id": list_id, "operation": operation}))
+
+         connection.commit()
 
    response.access_control_allow_origin = "*"
    response.access_control_allow_methods = ["POST", "OPTIONS"]
    response.access_control_allow_headers = ["Content-Type"]
    # print(operation, response)
    return response
+
 
 @app.get("/get-lists")
 def get_all_lists():
