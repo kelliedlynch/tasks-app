@@ -18,8 +18,8 @@ export function sortList( unsortedList ) {
       completeItems.push(item);
     };
   });
-  incompleteItems.sort(function(a, b){return a["item_id"] - b["item_id"]});
-  completeItems.sort(function(a, b){return a["item_id"] - b["item_id"]});
+  incompleteItems.sort(function(a, b){return a["itemId"] - b["itemId"]});
+  completeItems.sort(function(a, b){return a["itemId"] - b["itemId"]});
   return incompleteItems.concat(completeItems);
 }
 

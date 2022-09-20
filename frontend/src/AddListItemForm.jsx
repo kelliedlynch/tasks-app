@@ -19,8 +19,8 @@ function AddListItemForm(props) {
   async function handleSubmit( event ) {
     if(newListItemName === "") { return };
     const newListItem = {
-      name: newListItemName,
-      id: props.listId,
+      itemName: newListItemName,
+      listId: props.listId,
     }
     props.addListItem( newListItem );
     setNewListItemName("");

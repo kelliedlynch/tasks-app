@@ -39,21 +39,25 @@ function ChecklistBody(props) {
     }
   }, [props.currentListId]);
 
-  function listItemWasToggled(itemId) {
+  async function listItemWasToggled(itemId) {
     let updatedItems = listItems;
     for ( let i=0; i<updatedItems.length; i++ ) {
-      if( updatedItems[i].item_id === itemId ) {
+      console.log("loop", i);
+      if( updatedItems[i].itemId === itemId ) {
+        console.log("item found, updating completed tag");
         updatedItems[i].completed = (updatedItems[i].completed ? 0 : 1);
         break;
       }
     }
-    setListItems(sortList(updatedItems));
+    let sortedItems = sortList(updatedItems);
+    console.log("sortedItems", sortedItems);
+    setListItems(sortedItems);
   }
 
   function listItemWasDeleted(itemId) {
     let updatedItems = []
     listItems.forEach( listItem => {
-        if( listItem.item_id !== itemId ) {
+        if( listItem.itemId !== itemId ) {
           updatedItems.push(listItem);
         }
     })
@@ -67,8 +71,8 @@ function ChecklistBody(props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         do: "add_list_item",
-        name: item.name,
-        list_id: item.id })
+        name: item.itemName,
+        list_id: item.listId })
     }
     console.log("request looks like", requestOptions);
     const response = await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
