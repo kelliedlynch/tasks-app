@@ -38,13 +38,13 @@ def edit_list_item():
       if request.json["do"] == "update_completed":
          query = "UPDATE list_items SET completed=%s WHERE item_id=%s" % (request.json["completed"], request.json["item_id"])
       elif request.json["do"] == "update_item_name":
-         query = "UPDATE list_items SET name='%s' WHERE item_id=%s" % (request.json["name"], request.json["item_id"])
+         query = "UPDATE list_items SET item_name='%s' WHERE item_id=%s" % (request.json["item_name"], request.json["item_id"])
       elif request.json["do"] == "add_list_item":
-         query = "INSERT INTO list_items (name, list_id) VALUES ('%s', '%s')" % (request.json["name"], request.json["list_id"])
+         query = "INSERT INTO list_items (item_name, list_id) VALUES ('%s', '%s')" % (request.json["item_name"], request.json["list_id"])
       elif request.json["do"] == "delete_list_item":
          query = "DELETE FROM list_items WHERE item_id=%s" % request.json["item_id"]
       elif request.json["do"] == "update_list_name":
-         query = "UPDATE lists SET list_name='%s' WHERE list_id=%s" % (request.json["name"], request.json["list_id"])
+         query = "UPDATE lists SET list_name='%s' WHERE list_id=%s" % (request.json["list_name"], request.json["list_id"])
       print("query is", query);
 
       with sql.connect("database.db") as connection:
@@ -126,7 +126,7 @@ def get_list_items( listId ):
    for row in rows:
       query_array.append ({
          "itemId": row["item_id"],
-         "itemName": row["name"],
+         "itemName": row["item_name"],
          "completed": row["completed"]
       })
    query_results = jsonify(query_array)

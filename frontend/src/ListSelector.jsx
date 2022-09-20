@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 
 import Dropdown from "react-bootstrap/Dropdown";
@@ -6,14 +6,14 @@ import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Form from "react-bootstrap/Form";
 
-import { BACKEND_URL, EDIT_ITEM_API, GET_LISTS_API, NEW_LIST_ID } from "./Utility";
+import { BACKEND_URL, EDIT_ITEM_API, GET_LISTS_API } from "./Utility";
 
 // console.log("ListSelector loaded");
 
 function ListSelector( props ) {
   const [showListNameInputField, setShowListNameInputField] = useState(false);
   const [addNewList, setAddNewList] = useState(false);
-  const [currentList, setCurrentList] = useState({ name: "Loading"});
+  const [currentList, setCurrentList] = useState({ listName: "Loading"});
   const [allLists, setAllLists] = useState([]);
   const isMounted = useRef(false);
   const listsInitialized = useRef(false);
@@ -41,18 +41,18 @@ function ListSelector( props ) {
           rawAllLists.some( list => {
             if( list.isDefault === 1 ) {
               setCurrentList(list);
-              return true;
+              // return true;
             }
-            return false;
+            // return false;
           })
           listsInitialized.current = true
         } else if(listsInitialized.current) {
           rawAllLists.some( list => {
             if( list.listId === props.currentListId ) {
               setCurrentList(list);
-              return true;
+              // return true;
             }
-            return false;
+            // return false;
           })
         }
         setAllLists(rawAllLists);
@@ -91,43 +91,44 @@ function ListSelector( props ) {
     setShowListNameInputField(true);
   }
 
-  function didBlurListName(eventKey, event) {
+  function didBlurListName() {
     setShowListNameInputField(false);
     setAddNewList(false);
   }
 
   function handleKeyPress(event, listId) {
-    console.log(event.target.value, listId);
+    // console.log(event.target.value, listId);
     if(event.key === "Enter" && addNewList ) {
       props.createNewList(event.target.value);
       didBlurListName();
 
     } else if(event.key === "Enter") {
-      changeListName(event.target.value, listId);
       didBlurListName();
+      changeListName(event.target.value, listId);
+      
     }
     if(event.key === "Escape") {
       didBlurListName();
     }
   }
 
-  async function createNewList(name) {
-    console.log("create list", name);
-  }
+  // async function createNewList(listName) {
+  //   console.log("create list", listName);
+  // }
 
-  async function changeListName( name, listId ) {
+  async function changeListName( listName, listId ) {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         do: "update_list_name",
         list_id: listId,
-        name: name,
+        list_name: listName,
          })
       };
     await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
-    let updatedList = currentList;
-    updatedList.listName = name;
+    let updatedList = {...currentList};
+    updatedList.listName = listName;
     await setCurrentList(updatedList);
   }
 

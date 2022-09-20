@@ -15,27 +15,26 @@ import { BACKEND_URL, EDIT_ITEM_API } from "./Utility";
 function ListItem( props ) {
   const [editName, setEditName] = useState(false);
   const [listItem, setListItem] = useState({
-    item_id: props.itemId,
-    name: props.name,
-    completed: props.completed,
+    itemId: props.item.itemId,
+    itemName: props.item.itemName,
+    completed: props.item.completed,
   });
 
+  useEffect(() => {
+    setListItem(props.item);
+  }, [props.item])
 
   const inputField = useRef()
   // let focusInputField = false;
 
   useEffect(() => {
-    console.log("editName set to", editName);
     if(editName === true) {
-      console.log(inputField);
       inputField.current.focus();
     }
   }, [editName]);
 
   function focusItemName(event) {
-    // event.preventDefault();
     setEditName(true);
-    console.log("editName is", editName);
   }
 
   function unfocusItemName() {
@@ -43,7 +42,6 @@ function ListItem( props ) {
   }
 
   function handleKeyPress(event) {
-    console.log("key pressed", event.target.value);
     if(event.key === "Enter") {
       changeItemName(event.target.value)
     }
@@ -53,44 +51,39 @@ function ListItem( props ) {
   }
 
   async function toggleCompleted() {
-    let updatedItem = listItem;
-    updatedItem.completed = (updatedItem.completed === 0) ? 1 : 0;
+    let completed = (listItem.completed === 0) ? 1 : 0;
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         do: "update_completed",
-        item_id: updatedItem.item_id,
-        completed: updatedItem.completed,
+        item_id: listItem.itemId,
+        completed: completed,
          })
       };
     await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
-    setListItem(updatedItem)
-
-    props.toggle(updatedItem.item_id);
+    props.listWasChanged();
   }
 
-  async function changeItemName(name) {
-    console.log("changing name from", props.name, "to", name);
+  async function changeItemName(itemName) {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         do: "update_item_name",
-        item_id: listItem.item_id,
-        name: name,
+        item_id: listItem.itemId,
+        item_name: itemName,
          })
       };
       await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
-      let updatedItem = listItem;
-      updatedItem.name = name;
-      console.log("new list item", updatedItem);
+      let updatedItem = {...listItem};
+      updatedItem.itemName = itemName;
       await setListItem(updatedItem);
       setEditName(false);
   }
 
   function deleteThisItem() {
-    props.delete( listItem.item_id );
+    props.listWasChanged();
   }
 
   return (
@@ -101,7 +94,7 @@ function ListItem( props ) {
           controlId="formItemCheckbox"
           >
           <Form.Check
-            id={`listItemCheckbox${listItem.item_id}`}
+            id={`listItemCheckbox${listItem.itemId}`}
             type="checkbox" >
       <Container fluid >
       <Row>
@@ -115,7 +108,7 @@ function ListItem( props ) {
             <Col>
               {editName ? (
                 <Form.Control type="text"
-                  defaultValue={listItem.name}
+                  defaultValue={listItem.itemName}
                   onBlur={unfocusItemName}
                   autoFocus
                   onFocus={e => e.currentTarget.select()}
@@ -129,11 +122,11 @@ function ListItem( props ) {
                     bsPrefix={listItem.completed ?
                      ("text-decoration-line-through form-label")
                       : ("")}>
-                  {listItem.name}</Form.Check.Label>
+                  {listItem.itemName}</Form.Check.Label>
               )}
             </Col>
           <Col xs={2}>
-          <ItemMenu itemId={listItem.item_id} edit={focusItemName} delete={deleteThisItem} />
+          <ItemMenu itemId={listItem.itemId} edit={focusItemName} delete={deleteThisItem} />
           </Col>
       </Row>
       </Container>
