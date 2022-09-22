@@ -2,7 +2,7 @@ export const BACKEND_URL = "http://localhost:5001/";
 export const GET_API = "get-items";
 export const GET_LISTS_API = "get-lists";
 export const EDIT_ITEM_API = "edit-item";
-export const EDIT_LIST_API = "edit-list"
+export const EDIT_LIST_API = "edit-list";
 
 export const NEW_LIST_ID = -1;
 

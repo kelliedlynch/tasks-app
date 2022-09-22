@@ -2,11 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
+import Stack from "react-bootstrap/Stack";
 
-import ItemMenu from "./ItemMenu";
+import ItemEditMenu from "./ItemEditMenu";
 
 import { BACKEND_URL, EDIT_ITEM_API } from "./Utility";
 
@@ -62,7 +60,7 @@ function ListItem( props ) {
          })
       };
     await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
-    props.listWasChanged();
+    props.didChangeList();
   }
 
   async function changeItemName(itemName) {
@@ -82,58 +80,36 @@ function ListItem( props ) {
       setEditName(false);
   }
 
-  function deleteThisItem() {
-    props.listWasChanged();
-  }
-
   return (
     <ListGroup.Item>
+      <Stack direction="horizontal" gap={3}>
+        <Form.Check.Input type="checkbox"
+          onClick={toggleCompleted}
+          defaultChecked={listItem.completed}
+           />
+          {editName ? (
+            <Form.Control type="text"
+              defaultValue={listItem.itemName}
+              onBlur={unfocusItemName}
+              autoFocus
+              onFocus={e => e.currentTarget.select()}
+              onKeyUp={handleKeyPress}
+              ref={inputField}
+            />
+          ):(
+            <Form.Check.Label
+              // onClick={stopLabelPropagation}
+              onClick={focusItemName}
+              bsPrefix={listItem.completed ?
+               ("text-decoration-line-through form-label")
+                : ("")}>
+            {listItem.itemName}</Form.Check.Label>
+          )}
 
-        <Form.Group
-          className="mb-3"
-          controlId="formItemCheckbox"
-          >
-          <Form.Check
-            id={`listItemCheckbox${listItem.itemId}`}
-            type="checkbox" >
-      <Container fluid >
-      <Row>
-            <Col xs="auto">
-              <Form.Check.Input type="checkbox"
-                onClick={toggleCompleted}
-                defaultChecked={listItem.completed}
+        <ItemEditMenu itemId={listItem.itemId} edit={focusItemName} didChangeList={props.didChangeList} />
 
-                 />
-            </Col>
-            <Col>
-              {editName ? (
-                <Form.Control type="text"
-                  defaultValue={listItem.itemName}
-                  onBlur={unfocusItemName}
-                  autoFocus
-                  onFocus={e => e.currentTarget.select()}
-                  onKeyUp={handleKeyPress}
-                  ref={inputField}
-                />
-              ):(
-                  <Form.Check.Label
-                    // onClick={stopLabelPropagation}
-                    onClick={focusItemName}
-                    bsPrefix={listItem.completed ?
-                     ("text-decoration-line-through form-label")
-                      : ("")}>
-                  {listItem.itemName}</Form.Check.Label>
-              )}
-            </Col>
-          <Col xs={2}>
-          <ItemMenu itemId={listItem.itemId} edit={focusItemName} delete={deleteThisItem} />
-          </Col>
-      </Row>
-      </Container>
-          </Form.Check>
+      </Stack>
 
-
-        </Form.Group>
 
       </ListGroup.Item>
   );

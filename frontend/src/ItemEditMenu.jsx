@@ -6,7 +6,7 @@ import { BACKEND_URL, EDIT_ITEM_API } from "./Utility";
 
 // console.log("ItemMenu loaded");
 
-function ItemMenu(props) {
+function ItemEditMenu(props) {
   const [itemMenuButtons, setItemMenuButtons] = useState([]);
 
   useEffect(() => {
@@ -17,7 +17,6 @@ function ItemMenu(props) {
   }, []);
 
   async function deleteListItem() {
-    console.log("item to be deleted", props.itemId )
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -26,10 +25,9 @@ function ItemMenu(props) {
         item_id: props.itemId,
       })
     }
-    console.log("request looks like", requestOptions);
     await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
 
-    props.delete()
+    props.didChangeList()
   }
 
   function editItem() {
@@ -58,7 +56,7 @@ function ItemMenu(props) {
   }
 
   return (
-       <div className="item-menu-button" onMouseEnter={showItemMenu} onMouseLeave={hideItemMenu}>
+       <div className="item-menu-button ms-auto" onMouseEnter={showItemMenu} onMouseLeave={hideItemMenu}>
         {itemMenuButtons.map((button) =>
           <Button key={button.text} variant={button.variant} onClick={button.action}>{button.text}</Button>
         )}
@@ -66,4 +64,4 @@ function ItemMenu(props) {
    );
 }
 
-export default ItemMenu;
+export default ItemEditMenu;

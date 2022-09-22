@@ -28,9 +28,8 @@ function ChecklistBody(props) {
     }
   }, [props.currentListId, fetchAllListItems]);
 
-  async function listWasChanged() {
+  async function didChangeList() {
     fetchAllListItems();
-    console.log("listWasChanged");
   }
 
 
@@ -42,10 +41,10 @@ function ChecklistBody(props) {
         <ListItem
         key={listItem.itemId}
         item={listItem}
-        listWasChanged={listWasChanged}
+        didChangeList={didChangeList}
         />
       )}
-      <li className="list-group-item"><AddListItemForm listWasChanged={listWasChanged} listId={props.currentListId} /></li>
+      <li className="list-group-item"><AddListItemForm didChangeList={didChangeList} listId={props.currentListId} /></li>
     </ListGroup>
     </>
   );

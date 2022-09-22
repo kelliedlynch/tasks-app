@@ -1,27 +1,26 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 
 import Dropdown from "react-bootstrap/Dropdown";
-import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Form from "react-bootstrap/Form";
+import NavBar from "react-bootstrap/NavBar";
+import Stack from "react-bootstrap/Stack";
 
 import { BACKEND_URL, EDIT_ITEM_API, GET_LISTS_API } from "./Utility";
+import ListEditMenu from "./ListEditMenu";
 
 // console.log("ListSelector loaded");
 
 function ListSelector( props ) {
   const [showListNameInputField, setShowListNameInputField] = useState(false);
-  const [addNewList, setAddNewList] = useState(false);
+  const [addingNewList, setAddingNewList] = useState(false);
   const [currentList, setCurrentList] = useState({ listName: "Loading"});
   const [allLists, setAllLists] = useState([]);
   const isMounted = useRef(false);
   const listsInitialized = useRef(false);
 
   const inputField = useRef(null)
-  const changeList = useCallback(() => {
-    return props.changeList;
-  }, [props.changeList]);
 
   useEffect(() => {
     if( inputField.current ) {
@@ -41,18 +40,18 @@ function ListSelector( props ) {
           rawAllLists.some( list => {
             if( list.isDefault === 1 ) {
               setCurrentList(list);
-              // return true;
+              return true;
             }
-            // return false;
+            return false;
           })
           listsInitialized.current = true
         } else if(listsInitialized.current) {
           rawAllLists.some( list => {
             if( list.listId === props.currentListId ) {
               setCurrentList(list);
-              // return true;
+              return true;
             }
-            // return false;
+            return false;
           })
         }
         setAllLists(rawAllLists);
@@ -65,11 +64,12 @@ function ListSelector( props ) {
     initLists();
   }, [props.currentListId]);
 
-  useEffect(() => {
-    if( isMounted.current && currentList.listId !== undefined ) {
-      changeList(currentList.listId)
-    }
-  }, [currentList, changeList]);
+  // useEffect(() => {
+  //   if( isMounted.current && currentList.listId !== undefined ) {
+  //     console.log("didChangeList triggered from local state change")
+  //     didChangeList(currentList.listId)
+  //   }
+  // }, [currentList, didChangeList]);
 
   let otherLists = []
   allLists.forEach(thisList => {
@@ -79,11 +79,12 @@ function ListSelector( props ) {
   });
 
   function handleListChange(eventKey) {
-    if(eventKey === "addNewList") {
-      setAddNewList(true);
+    if(eventKey === "addingNewList") {
+      setAddingNewList(true);
       setShowListNameInputField(true);
     } else {
-      props.changeList( +eventKey );
+      console.log("eventKey", eventKey)
+      props.didChangeList( +eventKey );
     }
   }
 
@@ -93,12 +94,11 @@ function ListSelector( props ) {
 
   function didBlurListName() {
     setShowListNameInputField(false);
-    setAddNewList(false);
+    setAddingNewList(false);
   }
 
   function handleKeyPress(event, listId) {
-    // console.log(event.target.value, listId);
-    if(event.key === "Enter" && addNewList ) {
+    if(event.key === "Enter" && addingNewList ) {
       props.createNewList(event.target.value);
       didBlurListName();
 
@@ -111,10 +111,6 @@ function ListSelector( props ) {
       didBlurListName();
     }
   }
-
-  // async function createNewList(listName) {
-  //   console.log("create list", listName);
-  // }
 
   async function changeListName( listName, listId ) {
     const requestOptions = {
@@ -133,29 +129,32 @@ function ListSelector( props ) {
   }
 
   return (
-    <Dropdown as={ButtonGroup} onSelect={handleListChange} className="">
-      {showListNameInputField ? (
+    <Stack direction="horizontal" gap={3}>
+      <Dropdown as={ButtonGroup} onSelect={handleListChange} className="">
+        {showListNameInputField ? (
 
-            <Form.Control type="text"
-              defaultValue={addNewList ? "New List" : currentList.listName}
-              onBlur={didBlurListName}
-              onKeyUp={event => handleKeyPress(event, currentList.listId)}
-              ref={inputField}
-               />
+              <Form.Control type="text"
+                defaultValue={addingNewList ? "New List" : currentList.listName}
+                onBlur={didBlurListName}
+                onKeyUp={event => handleKeyPress(event, currentList.listId)}
+                ref={inputField}
+                 />
 
-        ) : (
-            <Button variant="primary" onClick={replaceButtonWithField} >{currentList.listName}</Button>
-        )}
+          ) : (
+              <h2 onClick={replaceButtonWithField} >{currentList.listName}</h2>
+          )}
 
-      <Dropdown.Toggle split variant="primary"></Dropdown.Toggle>
-      <Dropdown.Menu>
-        {allLists.map((list) =>
-          <Dropdown.Item key={list.listId} eventKey={list.listId} >{list.listName}</Dropdown.Item>
-        )}
-        <Dropdown.Divider />
-        <Dropdown.Item key="addNewList" eventKey="addNewList" >New List</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
+        <Dropdown.Toggle split as={NavBar.Toggle}></Dropdown.Toggle>
+        <Dropdown.Menu>
+          {allLists.map((list) =>
+            <Dropdown.Item key={list.listId} eventKey={list.listId} >{list.listName}</Dropdown.Item>
+          )}
+          <Dropdown.Divider />
+          <Dropdown.Item key="addingNewList" eventKey="addingNewList" >New List</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+      <ListEditMenu list={currentList} edit={replaceButtonWithField} didChangeList={props.didChangeList} />
+    </Stack>
   );
 }
 

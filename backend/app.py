@@ -69,14 +69,18 @@ def edit_list():
    response = Response()
    if request.method == "POST":
       operation = "post"
-      query = ""
+      queries = []
       print(request.json)
       if request.json["do"] == "create_new_list":
-         query = "INSERT INTO lists (list_name) VALUES ('%s')" % (request.json["list_name"])
+         queries.append("INSERT INTO lists (list_name) VALUES ('%s')" % (request.json["list_name"]))
+      if request.json["do"] == "delete_list":
+         queries.append("DELETE FROM lists WHERE list_id=%s" % request.json["list_id"])
+         queries.append("DELETE FROM list_items WHERE list_id=%s" % request.json["list_id"])
 
       with sql.connect("database.db") as connection:
          cursor = connection.cursor()
-         cursor.execute(query)
+         for query in queries:
+            cursor.execute(query)
          if(request.json["do"] == "create_new_list"):
             list_id = cursor.lastrowid
             response.set_data(json.dumps( { "list_id": list_id, "operation": operation}))

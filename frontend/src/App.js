@@ -10,23 +10,29 @@ function App() {
   const [currentListId, setCurrentListId] = useState(undefined);
 
   useEffect(() => {
-    async function initLists() {
-        const response = await fetch(BACKEND_URL + GET_LISTS_API );
-        const rawAllLists = await response.json();
-        rawAllLists.some( list => {
-          if( list.isDefault === 1 ) {
-            setCurrentListId(list.listId);
-            return true;
-          }
-          return false;
-        })
-    }
     initLists();
   }, []);
 
+  async function initLists() {
+    const response = await fetch(BACKEND_URL + GET_LISTS_API );
+    const rawAllLists = await response.json();
+    rawAllLists.some( list => {
+      if( list.isDefault === 1 ) {
+        setCurrentListId(list.listId);
+        return true;
+      }
+      return false;
+    });
+  }
 
-  function currentListWasChanged(listId) {
-    setCurrentListId(listId);
+
+  function didChangeList(listId) {
+    console.log("didChangeList in App.js")
+    if(listId < 0) {
+      initLists();
+    } else {
+      setCurrentListId(listId);
+    }
   }
 
   async function createNewList(listName) {
@@ -46,7 +52,7 @@ function App() {
 
   return (
     <div className="container-sm">
-      <ListSelector currentListId={currentListId} changeList={currentListWasChanged} createNewList={createNewList} />
+      <ListSelector currentListId={currentListId} didChangeList={didChangeList} createNewList={createNewList} />
       <ChecklistBody currentListId={currentListId} />
     </div>
   );

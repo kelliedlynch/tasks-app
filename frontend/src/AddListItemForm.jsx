@@ -28,7 +28,7 @@ function AddListItemForm(props) {
         list_id: props.listId })
     }
     await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
-    props.listWasChanged()
+    props.didChangeList()
   }
 
   return (
