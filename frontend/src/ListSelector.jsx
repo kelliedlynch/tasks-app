@@ -30,37 +30,38 @@ function ListSelector( props ) {
     }
   }, [showListNameInputField]);
 
-  useEffect(() => {
-    async function initLists() {
-      if(isMounted.current) {
-        const response = await fetch(BACKEND_URL + GET_LISTS_API );
-        const rawAllLists = await response.json();
+  async function initLists() {
+    if(isMounted.current) {
+      const response = await fetch(BACKEND_URL + GET_LISTS_API );
+      const rawAllLists = await response.json();
 
-        if(props.currentListId !== undefined && !listsInitialized.current) {
-          rawAllLists.some( list => {
-            if( list.isDefault === 1 ) {
-              setCurrentList(list);
-              return true;
-            }
-            return false;
-          })
-          listsInitialized.current = true
-        } else if(listsInitialized.current) {
-          rawAllLists.some( list => {
-            if( list.listId === props.currentListId ) {
-              setCurrentList(list);
-              return true;
-            }
-            return false;
-          })
-        }
-        setAllLists(rawAllLists);
-
-
-      } else {
-        isMounted.current = true;
+      if(props.currentListId !== undefined && !listsInitialized.current) {
+        rawAllLists.some( list => {
+          if( list.isDefault === 1 ) {
+            setCurrentList(list);
+            return true;
+          }
+          return false;
+        })
+        listsInitialized.current = true
+      } else if(listsInitialized.current) {
+        rawAllLists.some( list => {
+          if( list.listId === props.currentListId ) {
+            setCurrentList(list);
+            return true;
+          }
+          return false;
+        })
       }
+      setAllLists(rawAllLists);
+
+
+    } else {
+      isMounted.current = true;
     }
+  }
+
+  useEffect(() => {
     initLists();
   }, [props.currentListId]);
 
@@ -104,8 +105,9 @@ function ListSelector( props ) {
 
     } else if(event.key === "Enter") {
       didBlurListName();
-      changeListName(event.target.value, listId);
-      
+      if(event.target.value !== currentList.listName) { 
+        changeListName(event.target.value, listId);
+      }
     }
     if(event.key === "Escape") {
       didBlurListName();
@@ -126,6 +128,7 @@ function ListSelector( props ) {
     let updatedList = {...currentList};
     updatedList.listName = listName;
     await setCurrentList(updatedList);
+    initLists();
   }
 
   return (
