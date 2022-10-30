@@ -1,4 +1,5 @@
-export const BACKEND_URL = "http://localhost:5001/";
+// export const BACKEND_URL = "http://localhost:5001/";
+export const BACKEND_URL = "https://kellielynch.org/wsgi-scripts/tasks.py/";
 export const GET_API = "get-items";
 export const GET_LISTS_API = "get-lists";
 export const EDIT_ITEM_API = "edit-item";

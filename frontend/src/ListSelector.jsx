@@ -84,7 +84,6 @@ function ListSelector( props ) {
       setAddingNewList(true);
       setShowListNameInputField(true);
     } else {
-      console.log("eventKey", eventKey)
       props.didChangeList( +eventKey );
     }
   }

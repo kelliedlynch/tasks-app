@@ -27,7 +27,6 @@ function App() {
 
 
   function didChangeList(listId) {
-    console.log("didChangeList in App.js")
     if(listId < 0) {
       initLists();
     } else {
