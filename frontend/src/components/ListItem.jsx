@@ -6,7 +6,7 @@ import Stack from "react-bootstrap/Stack";
 
 import ItemEditMenu from "./ItemEditMenu";
 
-import { BACKEND_URL, EDIT_ITEM_API } from "./Utility";
+import { BACKEND_URL, EDIT_ITEM_API } from "../Utility";
 
 // console.log("ListItem loaded");
 

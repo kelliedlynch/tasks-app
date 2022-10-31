@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal"
 
-import { BACKEND_URL, EDIT_LIST_API } from "./Utility";
+import { BACKEND_URL, EDIT_LIST_API } from "../Utility";
 
 // console.log("ItemMenu loaded");
 

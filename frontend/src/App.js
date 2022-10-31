@@ -1,59 +1,88 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
-import ListSelector from "./ListSelector";
-import ChecklistBody from "./ChecklistBody";
+
+import Button from "react-bootstrap/Button";
+import Collapse from "react-bootstrap/Collapse";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Stack from "react-bootstrap/Stack";
+import Container from "react-bootstrap/Container";
+
+// import ListSelector from "./components/ListSelector";
+// import ChecklistBody from "./components/ChecklistBody";
+import ChecklistView from"./components/ChecklistView";
+import AppHeader from "./components/AppHeader";
+import AllListsView from "./components/AllListsView";
 import { BACKEND_URL, GET_LISTS_API, EDIT_LIST_API  } from "./Utility";  
 
 
 
 function App() {
-  const [currentListId, setCurrentListId] = useState(undefined);
+  const [currentList, setCurrentList] = useState({listId: undefined, listName: "Loading", items: []});
+  const [allLists, setAllLists] = useState([]);
+  const [showLeftPanel, setShowLeftPanel] = useState(false);
 
-  useEffect(() => {
-    initLists();
-  }, []);
-
-  async function initLists() {
+  const initLists = useCallback(async () => {
     const response = await fetch(BACKEND_URL + GET_LISTS_API );
     const rawAllLists = await response.json();
+    await setAllLists(rawAllLists);
     rawAllLists.some( list => {
       if( list.isDefault === 1 ) {
-        setCurrentListId(list.listId);
+        list.items=[];
+        setCurrentList(list);
         return true;
       }
       return false;
     });
-  }
+    // console.log(allLists);
+  }, []);
+
+  useEffect(() => {
+    initLists();
+  }, [initLists]);
 
 
-  function didChangeList(listId) {
-    if(listId < 0) {
-      initLists();
-    } else {
-      setCurrentListId(listId);
-    }
-  }
+  // function didChangeList(listId) {
+  //   if(listId < 0) {
+  //     initLists();
+  //   } else {
+  //     setCurrentListId(listId);
+  //   }
+  // }
 
-  async function createNewList(listName) {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        do: "create_new_list",
-        list_name: listName,
-      }),
-    }
+  // async function createNewList(listName) {
+  //   const requestOptions = {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({
+  //       do: "create_new_list",
+  //       list_name: listName,
+  //     }),
+  //   }
 
-    const response = await fetch(BACKEND_URL + EDIT_LIST_API, requestOptions);
-    const content = await response.json();
-    setCurrentListId(content.list_id);
-  }
+  //   const response = await fetch(BACKEND_URL + EDIT_LIST_API, requestOptions);
+  //   const content = await response.json();
+  //   setCurrentListId(content.list_id);
+  // }
 
   return (
-    <div className="container-sm">
-      <ListSelector currentListId={currentListId} didChangeList={didChangeList} createNewList={createNewList} />
-      <ChecklistBody currentListId={currentListId} />
+    <>
+    <AppHeader title="ToDo List Demo" />
+    <div className="d-flex">
+      <Collapse in={showLeftPanel} dimension="width">
+        <div className="" id="leftPanel">
+          <AllListsView allLists={allLists} />
+        </div>
+      </Collapse>
+      <div className="bg-theme-secondary">
+        <Button variant="light" onClick={() => setShowLeftPanel(!showLeftPanel)} aria-controls="leftPanel" aria-expanded={showLeftPanel}>«</Button>
+      </div>
+      <div className="flex-fill">
+        <ChecklistView currentList={currentList} />
+      </div>
     </div>
+
+    </>
   );
 };
 

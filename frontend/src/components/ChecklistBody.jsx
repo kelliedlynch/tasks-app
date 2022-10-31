@@ -4,7 +4,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 
 import ListItem from "./ListItem";
 import AddListItemForm from "./AddListItemForm";
-import { BACKEND_URL, GET_API, sortList } from "./Utility"; 
+import { BACKEND_URL, GET_API, sortList } from "../Utility";
 
 // console.log("ChecklistBody loaded");
 

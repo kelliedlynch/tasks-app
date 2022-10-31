@@ -7,7 +7,7 @@ import Form from "react-bootstrap/Form";
 import NavBar from "react-bootstrap/NavBar";
 import Stack from "react-bootstrap/Stack";
 
-import { BACKEND_URL, EDIT_ITEM_API, GET_LISTS_API } from "./Utility";
+import { BACKEND_URL, EDIT_ITEM_API, GET_LISTS_API } from "../Utility";
 import ListEditMenu from "./ListEditMenu";
 
 // console.log("ListSelector loaded");
