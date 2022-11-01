@@ -29,6 +29,7 @@ function App() {
     rawAllLists.some( list => {
       if( list.isDefault === 1 ) {
         list.items=[];
+        console.log("initializing list",  list);
         setCurrentList(list);
         return true;
       }
@@ -41,6 +42,16 @@ function App() {
     initLists();
   }, [initLists]);
 
+  function didSetCurrentList(listId) {
+    allLists.some(list => {
+      if(list.listId === listId) {
+        console.log("setting currentList");
+        setCurrentList(list);
+        return true;
+      }
+      return false;
+    });
+  }
 
   // function didChangeList(listId) {
   //   if(listId < 0) {
@@ -70,14 +81,14 @@ function App() {
     <AppHeader title="ToDo List Demo" />
     <div className="d-flex">
       <Collapse in={showLeftPanel} dimension="width">
-        <div className="" id="leftPanel">
-          <AllListsView allLists={allLists} />
+        <div className="theme-bg-contrast-lt" id="leftPanel">
+          <AllListsView allLists={allLists} setCurrentList={didSetCurrentList} />
         </div>
       </Collapse>
-      <div className="bg-theme-secondary">
-        <Button variant="light" onClick={() => setShowLeftPanel(!showLeftPanel)} aria-controls="leftPanel" aria-expanded={showLeftPanel}>«</Button>
+      <div className="theme-bg-contrast-lt">
+        <Button variant="light" onClick={() => setShowLeftPanel(!showLeftPanel)} aria-controls="leftPanel" aria-expanded={showLeftPanel}>{showLeftPanel ? "«" : "»"}</Button>
       </div>
-      <div className="flex-fill">
+      <div className="flex-fill px-3">
         <ChecklistView currentList={currentList} />
       </div>
     </div>

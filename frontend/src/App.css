@@ -1,36 +1,74 @@
 :root {
-  --primary:  #AF4608;
-  --secondary:  #EFC88B;
-  --tertiary:  #482C3D;
-  --accent: #449DD1;
-  --black: #1A1D23;
-  --white: #FAFAFF;
+  --base: #812B83;
+  --accent: #B52A2E;
+  --contrast: #B5B22A;
+  --base-lt: #F3F5F6;
+  --accent-lt: #FAF0FA;
+  --contrast-lt: #F2F8F6;
+  --off-white: #FAFAFA;
+  --off-black: #242424;
+  --de-emphasize: #9e9e9e;
 }
 
 
-.bg-theme-primary {
-  background-color: var(--primary);
-  color: var(--white);
+.theme-bg-base {
+  background-color: var(--base);
+  color: white;
 }
 
-.bg-theme-secondary {
-  background-color:  var(--secondary);
-  color: var(--black);
+.theme-bg-base-lt {
+  background-color: var(--base-lt);
+  color: var(--off-black);
 }
 
-.bg-theme-tertiary {
-  background-color:  var(--tertiary);
-  color: var(--white);
+.theme-bg-accent {
+  background-color:  var(--accent);
+  color: white;
 }
 
-.text-theme-primary {
-  color: var(--primary);
+.theme-bg-accent-lt {
+  background-color:  var(--accent-lt);
+  color: var(--off-black);
 }
 
-.text-theme-secondary {
-  color: var(--secondary);
+.theme-bg-contrast {
+  background-color: var(--contrast);
+  color: white;
 }
 
-.text-theme-tertiary {
-  color: var(--tertiary);
+.theme-bg-contrast-lt {
+  background-color: var(--contrast-lt);
+  color: var(--off-black);
+}
+
+.theme-content {
+  color: var(--off-black);
+}
+
+.theme-base {
+  color: var(--base);
+}
+
+.theme-accent {
+  color: var(--accent);
+}
+
+.theme-contrast {
+  color: var(--contrast);
+}
+
+#leftPanel {
+  overflow: hidden ;
+}
+
+#leftPanel h4 {
+  min-width: max-content;
+}
+
+#leftPanel .list-group-item {
+  min-width: max-content;
+}
+
+.action-button {
+  color:  var(--de-emphasize);
 }

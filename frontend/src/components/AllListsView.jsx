@@ -1,8 +1,11 @@
 import React, {useState, useEffect} from "react";
 
 import ListGroup from "react-bootstrap/ListGroup";
+import Button from "react-bootstrap/Button";
 
-function AllListsView({allLists}) {
+import ListsViewList from "./ListsViewList";
+
+function AllListsView({allLists, setCurrentList}) {
   const [lists, setLists] = useState(allLists);
 
   useEffect(() => {
@@ -11,9 +14,12 @@ function AllListsView({allLists}) {
 
   return (
     <>
-    <ListGroup>
+    <div className="px-3 pt-3 pb-1">
+      <h4 className="theme-base">All Lists</h4>
+    </div>
+    <ListGroup variant="flush">
       {lists.map((list) => {
-        return(<ListGroup.Item key={list.listId}>{list.listName}</ListGroup.Item>);
+        return(<ListsViewList key={list.listId} listData={list} setCurrentList={setCurrentList} />);
       })}
     </ListGroup>
     </>

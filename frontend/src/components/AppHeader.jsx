@@ -4,8 +4,8 @@ function AppHeader({title}) {
 
   return (
     <header>
-      <div className="navbar bg-theme-primary">
-        <h4 className="mx-4 my-2">{title}</h4>
+      <div className="navbar theme-bg-base">
+        <h3 className="mx-4 my-2">{title}</h3>
       </div>
     </header>
   );
