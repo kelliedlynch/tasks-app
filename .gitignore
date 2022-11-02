@@ -4,7 +4,6 @@ frontend/build/
 backend/node_modules/
 node_modules/
 venv/
-Dockerfile
 gh-pages
 gh-pages.pub
 backend/__pycache__/
