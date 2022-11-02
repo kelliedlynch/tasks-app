@@ -7,3 +7,4 @@ venv/
 gh-pages
 gh-pages.pub
 backend/__pycache__/
+backend/database.db

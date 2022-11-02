@@ -102,6 +102,7 @@ def get_all_lists():
    con.row_factory = sql.Row
    cur = con.cursor()
    cur.execute("SELECT * FROM list" )
+   print("WHY AREN'T YOU WORKING, MOTHERFUCKER?")
    rows = cur.fetchall();
 
    query_array = []
