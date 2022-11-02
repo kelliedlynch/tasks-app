@@ -35,15 +35,15 @@ def edit_list_item():
       query = ""
       print(request.json)
       if request.json["do"] == "update_completed":
-         query = "UPDATE list_items SET completed=%s WHERE item_id=%s" % (request.json["completed"], request.json["item_id"])
+         query = "UPDATE list_item SET completed=%s WHERE item_id=%s" % (request.json["completed"], request.json["item_id"])
       elif request.json["do"] == "update_item_name":
-         query = "UPDATE list_items SET item_name='%s' WHERE item_id=%s" % (request.json["item_name"], request.json["item_id"])
+         query = "UPDATE list_item SET item_name='%s' WHERE item_id=%s" % (request.json["item_name"], request.json["item_id"])
       elif request.json["do"] == "add_list_item":
-         query = "INSERT INTO list_items (item_name, list_id) VALUES ('%s', '%s')" % (request.json["item_name"], request.json["list_id"])
+         query = "INSERT INTO list_item (item_name, list_id) VALUES ('%s', '%s')" % (request.json["item_name"], request.json["list_id"])
       elif request.json["do"] == "delete_list_item":
-         query = "DELETE FROM list_items WHERE item_id=%s" % request.json["item_id"]
+         query = "DELETE FROM list_item WHERE item_id=%s" % request.json["item_id"]
       elif request.json["do"] == "update_list_name":
-         query = "UPDATE lists SET list_name='%s' WHERE list_id=%s" % (request.json["list_name"], request.json["list_id"])
+         query = "UPDATE list SET list_name='%s' WHERE list_id=%s" % (request.json["list_name"], request.json["list_id"])
       print("query is", query);
 
       with sql.connect("database.db") as connection:
@@ -71,10 +71,10 @@ def edit_list():
       queries = []
       print(request.json)
       if request.json["do"] == "create_new_list":
-         queries.append("INSERT INTO lists (list_name) VALUES ('%s')" % (request.json["list_name"]))
+         queries.append("INSERT INTO list (list_name) VALUES ('%s')" % (request.json["list_name"]))
       elif request.json["do"] == "delete_list":
-         queries.append("DELETE FROM lists WHERE list_id=%s" % request.json["list_id"])
-         queries.append("DELETE FROM list_items WHERE list_id=%s" % request.json["list_id"])
+         queries.append("DELETE FROM list WHERE list_id=%s" % request.json["list_id"])
+         queries.append("DELETE FROM list_item WHERE list_id=%s" % request.json["list_id"])
       elif request.json["do"] == "edit_list":
          queries.append("UPDATE lists SET list_name='%s' WHERE list_id=%s" % (request.json["list_name"], request.json["list_id"]))
 
@@ -101,7 +101,7 @@ def get_all_lists():
    con = sql.connect("database.db")
    con.row_factory = sql.Row
    cur = con.cursor()
-   cur.execute("SELECT * FROM lists" )
+   cur.execute("SELECT * FROM list" )
    rows = cur.fetchall();
 
    query_array = []
@@ -124,7 +124,7 @@ def get_list_items( listId ):
    con = sql.connect("database.db")
    con.row_factory = sql.Row
    cur = con.cursor()
-   cur.execute("SELECT * FROM list_items WHERE list_id=%s" % listId )
+   cur.execute("SELECT * FROM list_item WHERE list_id=%s" % listId )
    rows = cur.fetchall();
 
    query_array = []
