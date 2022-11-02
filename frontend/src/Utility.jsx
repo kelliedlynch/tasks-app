@@ -1,5 +1,6 @@
 
 let backend = "";
+console.log(window.location.hostname);
 switch(window.location.hostname) {
   case "localhost":
   case "127.0.0.1":
@@ -8,7 +9,7 @@ switch(window.location.hostname) {
   case "kellielynch.org":
     backend = "https://kellielynch.org/wsgi-scripts/tasks.py/";
     break;
-  case "github.io":
+  case "kelliedlynch.github.io":
     backend = "https://tasks-app-backend-b4gpr763fq-uc.a.run.app/";
     break;
   default:
