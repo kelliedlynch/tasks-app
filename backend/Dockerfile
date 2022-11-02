@@ -5,11 +5,14 @@ FROM python:3.7
 RUN pip install Flask gunicorn
 
 # 3
-RUN python init_db.py
+RUN ls
+RUN python ./init_db.py
 
 # 4
+RUN ls
 COPY . /app
 WORKDIR /app
+RUN ls
 
 # 5
 ENV PORT 8080
