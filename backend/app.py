@@ -6,7 +6,6 @@ import sqlite3 as sql
 
 app = Flask(__name__)
 app.debug = True
-print("app is running")
 
 # Database structure:
 # table: tasks
