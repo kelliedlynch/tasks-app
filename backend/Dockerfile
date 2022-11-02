@@ -9,9 +9,9 @@ RUN ls
 
 
 # 4
-RUN ls
 COPY . /app
 WORKDIR /app
+RUN ls
 RUN python3.7 init_db.py
 RUN ls
 
