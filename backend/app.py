@@ -114,7 +114,7 @@ def get_all_lists():
          })
    query_results = jsonify(query_array)
    query_results.headers.add('Access-Control-Allow-Origin', '*')
-   print(query_array)
+   print(query_results)
    return query_results
 
 

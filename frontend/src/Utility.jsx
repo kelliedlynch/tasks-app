@@ -1,4 +1,22 @@
-export const BACKEND_URL = "http://127.0.0.1:5000/";
+
+let backend = "";
+switch(window.location.hostname) {
+  case "localhost":
+  case "127.0.0.1":
+    backend = "http://127.0.0.1:5000/";
+    break;
+  case "kellielynch.org":
+    backend = "https://kellielynch.org/wsgi-scripts/tasks.py/";
+    break;
+  case "github.io":
+    backend = "https://tasks-app-backend-b4gpr763fq-uc.a.run.app/";
+    break;
+  default:
+    backend = ""
+}
+
+
+export const BACKEND_URL = backend;
 // export const BACKEND_URL = "https://kellielynch.org/wsgi-scripts/tasks.py/";
 export const GET_API = "get-items";
 export const GET_LISTS_API = "get-lists";
