@@ -1,4 +1,7 @@
 steps:
+# Debugging
+- name 'gcr.io/cloud-builders/ubuntu'
+- args: ['ls']
 # Build the container image
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/tasks-app-backend/github.com/kelliedlynch', '.']
