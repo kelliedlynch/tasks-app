@@ -45,6 +45,7 @@ def edit_list_item():
       elif request.json["do"] == "update_list_name":
          query = "UPDATE list SET list_name='%s' WHERE list_id=%s" % (request.json["list_name"], request.json["list_id"])
       print("query is", query);
+      print("OH DEAR GOD PLEASE WORK")
 
       with sql.connect("database.db") as connection:
          cursor = connection.cursor()
