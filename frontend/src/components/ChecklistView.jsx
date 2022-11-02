@@ -3,18 +3,18 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ListGroup from "react-bootstrap/ListGroup";
 import Stack from "react-bootstrap/Stack";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+// import Modal from "react-bootstrap/Modal";
 
 import { FiEdit } from "react-icons/fi";
 
-import ListItem from "./ListItem";
+import ListItemView from "./ListItemView";
 import AddListItemForm from "./AddListItemForm";
 import EditListMenuView from "./EditListMenuView";
 import { BACKEND_URL, GET_API, sortList } from "../Utility";
 
 // console.log("ChecklistBody loaded");
 
-function ChecklistView({currentList}) {
+function ChecklistView({currentList, didEditList}) {
   const isMounted = useRef(false);
 
   const [list, setList] = useState(currentList);
@@ -49,6 +49,15 @@ function ChecklistView({currentList}) {
     setEditListMenuOpen(false);
   }
 
+  function didEditListDetails(newListData) {
+    newListData.listId = list.listId;
+    didEditList(newListData);
+  }
+
+  function didClickDeleteList(listId) {
+    console.log("confirm delete list");
+  }
+
   return (
     <>
     <div className="px-4 pt-3 pb-1">
@@ -61,7 +70,7 @@ function ChecklistView({currentList}) {
     </div>
     <ListGroup>
       {list.items.map((listItem) =>
-        <ListItem
+        <ListItemView
         key={listItem.itemId}
         item={listItem}
         didChangeList={didChangeList}
@@ -70,7 +79,13 @@ function ChecklistView({currentList}) {
       <li className="list-group-item"><AddListItemForm didChangeList={didChangeList} listId={list.listId} /></li>
     </ListGroup>
 
-    <EditListMenuView show={editListMenuOpen} hide={closeEditListMenu} listName={list.listName} />
+    <EditListMenuView
+      show={editListMenuOpen}
+      hide={closeEditListMenu}
+      listName={list.listName}
+      didEditListDetails={didEditListDetails}
+      closeEditListMenu={closeEditListMenu}
+      didClickDeleteList={didClickDeleteList} />
     </>
   );
 }

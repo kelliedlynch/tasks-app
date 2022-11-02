@@ -5,7 +5,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Stack from "react-bootstrap/Stack";
 
 function ListsViewList({listData, setCurrentList}) {
-  const [list, setList] = useState(listData);
+  const [list, ] = useState(listData);
   // const [showEditButton, setShowEditButton] = useState(false);
 
   console.log("ListsViewList", list.listId);

@@ -3,10 +3,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Stack from "react-bootstrap/Stack";
-import Container from "react-bootstrap/Container";
 
 // import ListSelector from "./components/ListSelector";
 // import ChecklistBody from "./components/ChecklistBody";
@@ -76,6 +72,23 @@ function App() {
   //   setCurrentListId(content.list_id);
   // }
 
+
+  async function didEditList(listData) {
+      const requestOptions = {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          do: "edit_list",
+          list_id: listData.listId,
+          list_name: listData.listName
+        }),
+      }
+
+      const response = await fetch(BACKEND_URL + EDIT_LIST_API, requestOptions);
+      const content = await response.json();
+      console.log(content)
+    }
+
   return (
     <>
     <AppHeader title="ToDo List Demo" />
@@ -89,7 +102,7 @@ function App() {
         <Button variant="light" onClick={() => setShowLeftPanel(!showLeftPanel)} aria-controls="leftPanel" aria-expanded={showLeftPanel}>{showLeftPanel ? "«" : "»"}</Button>
       </div>
       <div className="flex-fill px-3">
-        <ChecklistView currentList={currentList} />
+        <ChecklistView currentList={currentList} didEditList={didEditList} />
       </div>
     </div>
 

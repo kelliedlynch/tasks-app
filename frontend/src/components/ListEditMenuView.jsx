@@ -7,7 +7,7 @@ import { BACKEND_URL, EDIT_LIST_API } from "../Utility";
 
 // console.log("ItemMenu loaded");
 
-function ListEditMenu(props) {
+function ListEditMenuView(props) {
   const [listMenuButtons, setListMenuButtons] = useState([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
@@ -104,4 +104,4 @@ function ListEditMenu(props) {
    );
 }
 
-export default ListEditMenu;
+export default ListEditMenuView;

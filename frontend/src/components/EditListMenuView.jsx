@@ -4,30 +4,29 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
-function EditListMenuView({show, hide, listName}) {
+function EditListMenuView({show, hide, listName, didEditListDetails, closeEditListMenu, didClickDeleteList}) {
   const [nameFieldValue, setNameFieldValue] = useState(listName);
 
   const listNameField = useRef();
-
-  console.log("listName on menu render", listName);
 
   useEffect(() => {
     setNameFieldValue(listName);
   }, [listName]);
 
   const onChangeNameFieldValue = (event) => {
-    console.log("nameFieldValue changing", event.target.value)
     setNameFieldValue(event.target.value);
   }
 
   const submitListChanges = (event) => {
     event.preventDefault();
+    // console.log(event.target);
+    didEditListDetails({ listName: nameFieldValue })
     hide();
   }
 
   return (
   <Modal show={show} onHide={hide}>
-    <Modal.Header>
+    <Modal.Header closeButton>
       <Modal.Title className="theme-accent">
         Edit List
       </Modal.Title>
@@ -43,6 +42,8 @@ function EditListMenuView({show, hide, listName}) {
       </Modal.Body>
       <Modal.Footer>
         <Button type="submit">Save</Button>
+        <Button variant="danger" type="button" onClick={didClickDeleteList}>Delete</Button>
+        <Button variant="secondary" type="button" onClick={closeEditListMenu}>Cancel</Button>
       </Modal.Footer>
     </Form>
   </Modal>

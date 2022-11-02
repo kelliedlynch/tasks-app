@@ -63,33 +63,35 @@ def edit_list_item():
    # print(operation, response)
    return response
 
-@app.route("/edit-list", methods=["POST", "OPTIONS"])
+@app.route("/edit-list", methods=["PATCH", "OPTIONS"])
 def edit_list():
    operation = "preflight"
    response = Response()
-   if request.method == "POST":
-      operation = "post"
+   if request.method == "PATCH":
+      operation = "patch"
       queries = []
       print(request.json)
       if request.json["do"] == "create_new_list":
          queries.append("INSERT INTO lists (list_name) VALUES ('%s')" % (request.json["list_name"]))
-      if request.json["do"] == "delete_list":
+      elif request.json["do"] == "delete_list":
          queries.append("DELETE FROM lists WHERE list_id=%s" % request.json["list_id"])
          queries.append("DELETE FROM list_items WHERE list_id=%s" % request.json["list_id"])
+      elif request.json["do"] == "edit_list":
+         queries.append("UPDATE lists SET list_name='%s' WHERE list_id=%s" % (request.json["list_name"], request.json["list_id"]))
 
       with sql.connect("database.db") as connection:
          cursor = connection.cursor()
          for query in queries:
             cursor.execute(query)
-         if(request.json["do"] == "create_new_list"):
+         if(request.json["do"] == "edit_list"):
             list_id = cursor.lastrowid
-            response.set_data(json.dumps( { "list_id": list_id, "operation": operation}))
+            response.set_data(json.dumps( { "list_id": request.json["list_id"], "operation": operation}))
 
          connection.commit()
 
    response.access_control_allow_origin = "*"
-   response.access_control_allow_methods = ["POST", "OPTIONS"]
-   response.access_control_allow_headers = ["Content-Type"]
+   response.access_control_allow_methods = ["PATCH", "OPTIONS"]
+   response.access_control_allow_headers = ["Content-Type","Postman-Token"]
    # print(operation, response)
    return response
 
@@ -136,5 +138,3 @@ def get_list_items( listId ):
    query_results = jsonify(query_array)
    query_results.headers.add('Access-Control-Allow-Origin', '*')
    return query_results
-
-# application = app

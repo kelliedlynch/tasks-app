@@ -10,7 +10,7 @@ import { BACKEND_URL, EDIT_ITEM_API } from "../Utility";
 
 // console.log("ListItem loaded");
 
-function ListItem( props ) {
+function ListItemView( props ) {
   const [editName, setEditName] = useState(false);
   const [listItem, setListItem] = useState({
     itemId: props.item.itemId,
@@ -115,4 +115,4 @@ function ListItem( props ) {
   );
 }
 
-export default ListItem;
+export default ListItemView;
