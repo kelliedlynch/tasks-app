@@ -5,12 +5,10 @@ FROM python:3.7
 RUN pip install Flask gunicorn
 
 # 3
-RUN ls
-
-
-# 4
 COPY . /app
 WORKDIR /app
+
+# 4
 RUN ls
 RUN python3.7 init_db.py
 RUN ls
