@@ -12,8 +12,8 @@ RUN ls
 RUN ls
 COPY . /app
 WORKDIR /app
-RUN ls
 RUN python3.7 init_db.py
+RUN ls
 
 # 5
 ENV PORT 8080
