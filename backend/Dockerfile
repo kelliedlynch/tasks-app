@@ -9,7 +9,10 @@ COPY . /app
 WORKDIR /app
 
 # 4
-ENV PORT 8080
+RUN python init_db.py
 
 # 5
+ENV PORT 8080
+
+# 6
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 app:app
