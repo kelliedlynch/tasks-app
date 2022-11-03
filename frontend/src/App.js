@@ -64,7 +64,7 @@ function App() {
       }
 
       const response = await fetch(BACKEND_URL + EDIT_LIST_API, requestOptions);
-      const content = await response.json();
+      await response.json();
 
       let newLists = JSON.parse(JSON.stringify(allLists));
       newLists[listData.listId].listName = listData.listName;

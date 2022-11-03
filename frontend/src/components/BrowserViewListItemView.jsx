@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 // import { FaEdit } from "react-icons/fa";
 
 import ListGroup from "react-bootstrap/ListGroup";
-import Stack from "react-bootstrap/Stack";
-import Button from "react-bootstrap/Button";
+
 
 function BrowserViewListItemView({listData, setCurrentList}) {
   const [list, setList] = useState(listData);
