@@ -7,7 +7,7 @@ RUN pip install gunicorn
 # 3
 COPY . /app
 WORKDIR /app
-RUN pip install -r backend/requirements.txt
+RUN pip install -r requirements.txt
 
 # 4
 RUN python3.7 init_db.py
