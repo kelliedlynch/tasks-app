@@ -60,19 +60,19 @@ function ChecklistView({currentList, didEditList}) {
     console.log("confirm delete list");
   }
 
-  async function deleteListItem(item) {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        do: "delete_list_item",
-        item_id: item.itemId,
-      })
-    }
-    await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
+  // async function deleteListItem(item) {
+  //   const requestOptions = {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({
+  //       do: "delete_list_item",
+  //       item_id: item.itemId,
+  //     })
+  //   }
+  //   await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
 
-    didChangeList()
-  }
+  //   didChangeList()
+  // }
 
   return (
     <>
