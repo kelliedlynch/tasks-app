@@ -3,7 +3,7 @@ FROM python:3.7
 
 # 2
 RUN pip install gunicorn
-RUN pip install -r requirements.txt
+RUN pip install -r ./requirements.txt
 
 # 3
 COPY . /app
