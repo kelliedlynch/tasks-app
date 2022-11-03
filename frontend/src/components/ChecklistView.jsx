@@ -9,7 +9,7 @@ import { FiEdit } from "react-icons/fi";
 import ListItemView from "./ListItemView";
 import AddListItemForm from "./AddListItemForm";
 import EditListMenuView from "./EditListMenuView";
-import { BACKEND_URL, GET_API, EDIT_ITEM_API, sortList } from "../Utility";
+import { BACKEND_URL, GET_API, sortList } from "../Utility";
 
 // console.log("ChecklistBody loaded");
 
