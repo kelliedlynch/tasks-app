@@ -69,8 +69,33 @@
   min-width: max-content;
 }
 
-.action-button {
+.list-item-container {
+  height: 3.5rem;
+}
+
+.col.list-item-left {
+  flex: 0 1 2rem;
+}
+
+.col.list-item-mid {
+  flex: 10 10 0;
+  /*flex-basis: auto;*/
+}
+
+.col.list-item-right {
+  flex: 1 1 0;
+}
+
+.btn.theme-edit-button {
+  background-color: transparent;
+  border-color: transparent;
   color:  var(--de-emphasize);
+}
+
+button:hover.btn.theme-edit-button {
+  background-color: var(--contrast-lt);
+  border-color: var(--de-emphasize);
+  color: var(--off-black);
 }
 
 .arrow-point-left {

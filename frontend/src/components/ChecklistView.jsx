@@ -66,7 +66,7 @@ function ChecklistView({currentList, didEditList}) {
       <Stack direction="horizontal">
         <h3 className="theme-accent">{list.listName}</h3>
         <div className="ms-auto" >
-          <Button onClick={openEditListMenu} variant="outline-secondary"><FiEdit /></Button>
+          <Button onClick={openEditListMenu} className="theme-edit-button"><FiEdit /></Button>
         </div>
       </Stack>
     </div>

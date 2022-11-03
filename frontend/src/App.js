@@ -8,7 +8,7 @@ import { MdDoubleArrow } from "react-icons/md";
 
 import ChecklistView from"./components/ChecklistView";
 import AppHeaderView from "./components/AppHeaderView";
-import AllListsView from "./components/AllListsView";
+import BrowserView from "./components/BrowserView";
 import { BACKEND_URL, GET_LISTS_API, EDIT_LIST_API  } from "./Utility";  
 
 
@@ -49,13 +49,7 @@ function App() {
   // }
 
   function didSetCurrentList(listId) {
-    allLists.some(list => {
-      if(list.listId === listId) {
-        setCurrentList(list);
-        return true;
-      }
-      return false;
-    });
+    setCurrentList(listId);
   }
 
   async function didEditList(listData) {
@@ -86,7 +80,7 @@ function App() {
     <div className="d-flex">
       <Collapse in={showLeftPanel} dimension="width">
         <div className="theme-bg-contrast-lt" id="leftPanel">
-          <AllListsView allLists={allLists} setCurrentList={didSetCurrentList} />
+          <BrowserView allLists={allLists} setCurrentList={didSetCurrentList} />
         </div>
       </Collapse>
       <div className="panel-preview"></div>
