@@ -4,6 +4,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 
+import { MdDoubleArrow } from "react-icons/md";
+
 import ChecklistView from"./components/ChecklistView";
 import AppHeaderView from "./components/AppHeaderView";
 import AllListsView from "./components/AllListsView";
@@ -87,8 +89,16 @@ function App() {
           <AllListsView allLists={allLists} setCurrentList={didSetCurrentList} />
         </div>
       </Collapse>
-      <div className="theme-bg-contrast-lt">
-        <Button variant="light" onClick={() => setShowLeftPanel(!showLeftPanel)} aria-controls="leftPanel" aria-expanded={showLeftPanel}>{showLeftPanel ? "«" : "»"}</Button>
+      <div className="panel-preview"></div>
+      <div className="">
+        <Button
+          className="panel-open-button"
+          variant="light"
+          onClick={() => setShowLeftPanel(!showLeftPanel)}
+          aria-controls="leftPanel"
+          aria-expanded={showLeftPanel}>
+            <MdDoubleArrow class={"" + (showLeftPanel ? "arrow-point-left" : "arrow-point-right")} />
+          </Button>
       </div>
       <div className="flex-fill px-3">
         <ChecklistView currentList={allLists[currentList]} didEditList={didEditList} />

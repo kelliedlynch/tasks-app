@@ -72,3 +72,30 @@
 .action-button {
   color:  var(--de-emphasize);
 }
+
+.arrow-point-left {
+  transform: rotate(180deg);
+}
+
+.btn.panel-open-button {
+  border-color: var(--base);
+  border-left: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: var(--contrast-lt);
+  color: var(--accent);
+  margin-top: 1rem;
+  margin-left: -1px;
+}
+
+.panel-preview {
+  background-color: var(--contrast-lt);
+  width: 1rem;
+  border-right: 1px solid var(--base);
+}
+
+button:hover.btn.panel-open-button {
+  border-color: var(--base);
+  color: var(--base);
+
+}
