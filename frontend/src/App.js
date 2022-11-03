@@ -71,9 +71,6 @@ function App() {
       await setAllLists(newLists);
     }
 
-    // console.log(allLists[currentList]);
-    // let foo = allLists[currentList];
-
   return (
     <>
     <AppHeaderView title="ToDo List Demo" />
