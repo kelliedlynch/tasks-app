@@ -10,24 +10,25 @@ import Container from "react-bootstrap/Container";
 
 import { FiEdit } from "react-icons/fi";
 
-import ItemEditMenu from "./ItemEditMenu";
+import ListItemEditMenuView from "./ListItemEditMenuView";
 
 import { BACKEND_URL, EDIT_ITEM_API } from "../Utility";
 
 // console.log("ListItem loaded");
 
-function ListItemView( props ) {
+function ListItemView( {thisItem, didChangeList} ) {
   const [showEditNameForm, setShowEditNameForm] = useState(false);
   const [showOpenMenuButton, setShowOpenMenuButton] = useState(false);
+  const [showEditListItemMenu, setShowEditListItemMenu] = useState(false);
   const [listItem, setListItem] = useState({
-    itemId: props.item.itemId,
-    itemName: props.item.itemName,
-    completed: props.item.completed,
+    itemId: thisItem.itemId,
+    itemName: thisItem.itemName,
+    completed: thisItem.completed,
   });
 
   useEffect(() => {
-    setListItem(props.item);
-  }, [props.item])
+    setListItem(thisItem);
+  }, [thisItem])
 
   const inputField = useRef()
   // let focusInputField = false;
@@ -56,18 +57,42 @@ function ListItemView( props ) {
   }
 
   async function toggleCompleted() {
-    let completed = (listItem.completed === 0) ? 1 : 0;
+    const completed = (listItem.completed === 0) ? 1 : 0;
+    didEditListItem({item_id: listItem.itemId, completed: completed});
+    // const requestOptions = {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({
+    //     do: "update_completed",
+    //     item_id: listItem.itemId,
+    //     completed: completed,
+    //      })
+    //   };
+    // await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
+    // props.didChangeList();
+  }
+
+  async function didEditListItem(item) {
+    console.log("editing", item)
+    // for(const [key, value] of Object.entries(item)) {
+
+    // }
     const requestOptions = {
-      method: 'POST',
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        do: "update_completed",
-        item_id: listItem.itemId,
-        completed: completed,
-         })
-      };
+        item_data: item
+      })
+    }
     await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
-    props.didChangeList();
+    let newItem = {...listItem}
+    for(const [key, value] of Object.entries(item)) { newItem[key] = value }
+    setListItem(newItem);
+    didChangeList();
+  }
+
+  function closeEditListItemMenu() {
+    setShowEditListItemMenu(false);
   }
 
   async function changeItemName(itemName) {
@@ -88,24 +113,19 @@ function ListItemView( props ) {
   }
 
   return (
+    <>
     <ListGroup.Item
       onMouseEnter={() => setShowOpenMenuButton(true)}
       onMouseLeave={() => setShowOpenMenuButton(false)}
     >
-{/*    <Container
-
-    >*/}
       <Row
-        // direction="horizontal"
-        // gap={3}
-        // className="align-items-center"
         className="list-item-container d-flex align-items-center"
       >
         <Col
           className="list-item-left"
         >
           <Form.Check.Input type="checkbox"
-            onClick={toggleCompleted}
+            onClick={(toggleCompleted)}
             defaultChecked={listItem.completed}
              />
         </Col>
@@ -134,14 +154,20 @@ function ListItemView( props ) {
           <Col
             className="list-item-right"
           >
-          {showOpenMenuButton && <Button className="theme-edit-button ms-auto" ><FiEdit /></Button> }
+          {showOpenMenuButton && <Button className="theme-edit-button ms-auto" onClick={() => setShowEditListItemMenu(true)} ><FiEdit /></Button> }
           </Col>
 
       </Row>
-    {/*</Container>*/}
-
 
       </ListGroup.Item>
+      <ListItemEditMenuView
+        show={showEditListItemMenu}
+        hide={closeEditListItemMenu}
+        listItem={listItem}
+        didEditListItem={didEditListItem}
+        didCloseEditListItemMenu={closeEditListItemMenu}
+      />
+      </>
   );
 }
 

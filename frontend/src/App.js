@@ -91,8 +91,8 @@ function App() {
           onClick={() => setShowLeftPanel(!showLeftPanel)}
           aria-controls="leftPanel"
           aria-expanded={showLeftPanel}>
-            <MdDoubleArrow class={"" + (showLeftPanel ? "arrow-point-left" : "arrow-point-right")} />
-          </Button>
+            <MdDoubleArrow className={"" + (showLeftPanel ? "arrow-point-left" : "arrow-point-right")} />
+        </Button>
       </div>
       <div className="flex-fill px-3">
         <ChecklistView currentList={allLists[currentList]} didEditList={didEditList} />

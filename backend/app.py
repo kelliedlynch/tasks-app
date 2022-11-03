@@ -3,28 +3,12 @@ import sys
 from flask import Flask, jsonify, request, Response
 import json
 import sqlite3 as sql
+import copy
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.debug = True
-
-# Database structure:
-# table: tasks
-#   name: TEXT
-#   completed: BOOL
-
-# @app.get("/add_task")
-# def test_app():
-#    with sql.connect("database.db") as con:
-#       cur = con.cursor()
-#       cur.execute("INSERT INTO tasks (name, completed) VALUES ('start on the chores', False)")
-#       cur.execute("INSERT INTO tasks (name, completed) VALUES ('sweep ''til the floors are clean', False)")
-#       cur.execute("INSERT INTO tasks (name, completed) VALUES ('polish and wax', False)")
-#       cur.execute("INSERT INTO tasks (name, completed) VALUES ('do laundry', False)")
-#       cur.execute("INSERT INTO tasks (name, completed) VALUES ('mop and shine up', False)")
-#       con.commit()
-#       con.close()
-#       msg = "records added"
-#    return msg
+CORS(app)
 
 @app.route("/edit-item", methods=["POST", "OPTIONS"])
 def edit_list_item():
@@ -60,6 +44,36 @@ def edit_list_item():
    response.access_control_allow_methods = ["POST", "OPTIONS"]
    response.access_control_allow_headers = ["Content-Type"]
    # print(operation, response)
+   return response
+
+@app.patch("/edit-item-new")
+def edit_list_item_new():
+   print("request is", request)
+   response = Response()
+   item = copy.copy(request.json["item_data"])
+   item_id = item["item_id"]
+   del item["item_id"]
+
+   # update_values = ""
+   # for column, value in item.items():
+   #    update_values += column+"="+value+","
+   # update_values = update_values[:-1]
+
+   columns = ",".join(item.keys())
+   values = "'" + "','".join(map(str, item.values())) + "'"
+
+   query = "UPDATE list_item SET (%s)=(%s) WHERE item_id=%s" % (columns, values, item_id)
+   print(query)
+   with sql.connect("database.db") as connection:
+         cursor = connection.cursor()
+         cursor.execute(query)
+         connection.commit()
+
+   response.set_data(json.dumps( { "item_id": item_id, "columns": columns, "values": values }))
+   response.access_control_allow_origin = "*"
+   response.access_control_allow_methods = ["PATCH"]
+   response.access_control_allow_headers = ["Content-Type"]
+   print(response)
    return response
 
 @app.route("/edit-list", methods=["PATCH", "OPTIONS"])
@@ -102,7 +116,6 @@ def get_all_lists():
    con.row_factory = sql.Row
    cur = con.cursor()
    cur.execute("SELECT * FROM list" )
-   print("WHY AREN'T YOU WORKING, MOTHERFUCKER?")
    rows = cur.fetchall();
 
    query_array = []
@@ -138,3 +151,7 @@ def get_list_items( listId ):
    query_results = jsonify(query_array)
    query_results.headers.add('Access-Control-Allow-Origin', '*')
    return query_results
+
+
+def handle_preflight(methods):
+   return

@@ -9,7 +9,7 @@ import { FiEdit } from "react-icons/fi";
 import ListItemView from "./ListItemView";
 import AddListItemForm from "./AddListItemForm";
 import EditListMenuView from "./EditListMenuView";
-import { BACKEND_URL, GET_API, sortList } from "../Utility";
+import { BACKEND_URL, GET_API, EDIT_ITEM_API, sortList } from "../Utility";
 
 // console.log("ChecklistBody loaded");
 
@@ -60,13 +60,32 @@ function ChecklistView({currentList, didEditList}) {
     console.log("confirm delete list");
   }
 
+  async function deleteListItem(item) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        do: "delete_list_item",
+        item_id: item.itemId,
+      })
+    }
+    await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
+
+    didChangeList()
+  }
+
   return (
     <>
     <div className="px-4 pt-3 pb-1">
       <Stack direction="horizontal">
         <h3 className="theme-accent">{list.listName}</h3>
         <div className="ms-auto" >
-          <Button onClick={openEditListMenu} className="theme-edit-button"><FiEdit /></Button>
+          <Button
+            onClick={openEditListMenu}
+            className="theme-edit-button"
+          >
+            <FiEdit />
+          </Button>
         </div>
       </Stack>
     </div>
@@ -74,7 +93,7 @@ function ChecklistView({currentList, didEditList}) {
       {list.items.map((listItem) =>
         <ListItemView
         key={listItem.itemId}
-        item={listItem}
+        thisItem={listItem}
         didChangeList={didChangeList}
         />
       )}

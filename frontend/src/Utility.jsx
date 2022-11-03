@@ -20,7 +20,7 @@ export const BACKEND_URL = backend;
 // export const BACKEND_URL = "https://kellielynch.org/wsgi-scripts/tasks.py/";
 export const GET_API = "get-items";
 export const GET_LISTS_API = "get-lists";
-export const EDIT_ITEM_API = "edit-item";
+export const EDIT_ITEM_API = "edit-item-new";
 export const EDIT_LIST_API = "edit-list";
 
 export const NEW_LIST_ID = -1;
