@@ -3,13 +3,11 @@ FROM python:3.7
 
 # 2
 RUN pip install gunicorn
-RUN ls
-RUN pwd
-RUN pip install -r backend/requirements.txt
 
 # 3
 COPY . /app
 WORKDIR /app
+RUN pip install -r backend/requirements.txt
 
 # 4
 RUN python3.7 init_db.py
