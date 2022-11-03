@@ -4,7 +4,7 @@ steps:
   args: ['build', '-t', 'gcr.io/tasks-app-backend/github.com/kelliedlynch', './backend']
 # Push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/tasks-app-backend/github.com']
+  args: ['push', 'gcr.io/tasks-app-backend/github.com/kelliedlynch']
 # Deploy container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
