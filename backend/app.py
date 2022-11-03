@@ -45,7 +45,6 @@ def edit_list_item():
       elif request.json["do"] == "update_list_name":
          query = "UPDATE list SET list_name='%s' WHERE list_id=%s" % (request.json["list_name"], request.json["list_id"])
       print("query is", query);
-      print("OH DEAR GOD PLEASE WORK")
 
       with sql.connect("database.db") as connection:
          cursor = connection.cursor()
@@ -77,7 +76,7 @@ def edit_list():
          queries.append("DELETE FROM list WHERE list_id=%s" % request.json["list_id"])
          queries.append("DELETE FROM list_item WHERE list_id=%s" % request.json["list_id"])
       elif request.json["do"] == "edit_list":
-         queries.append("UPDATE lists SET list_name='%s' WHERE list_id=%s" % (request.json["list_name"], request.json["list_id"]))
+         queries.append("UPDATE list SET list_name='%s' WHERE list_id=%s" % (request.json["list_name"], request.json["list_id"]))
 
       with sql.connect("database.db") as connection:
          cursor = connection.cursor()

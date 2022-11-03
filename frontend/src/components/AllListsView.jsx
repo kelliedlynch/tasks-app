@@ -18,8 +18,8 @@ function AllListsView({allLists, setCurrentList}) {
       <h4 className="theme-base">All Lists</h4>
     </div>
     <ListGroup variant="flush">
-      {lists.map((list) => {
-        return(<ListsViewList key={list.listId} listData={list} setCurrentList={setCurrentList} />);
+      {Object.keys(allLists).map( thisId => {
+        return(<ListsViewList key={thisId} listData={allLists[thisId]} setCurrentList={setCurrentList} />);
       })}
     </ListGroup>
     </>

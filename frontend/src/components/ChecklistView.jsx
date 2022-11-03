@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ListGroup from "react-bootstrap/ListGroup";
 import Stack from "react-bootstrap/Stack";
 import Button from "react-bootstrap/Button";
-// import Modal from "react-bootstrap/Modal";
 
 import { FiEdit } from "react-icons/fi";
 
@@ -17,7 +16,10 @@ import { BACKEND_URL, GET_API, sortList } from "../Utility";
 function ChecklistView({currentList, didEditList}) {
   const isMounted = useRef(false);
 
-  const [list, setList] = useState(currentList);
+  let listData = currentList;
+  listData["items"] = [];
+
+  const [list, setList] = useState(listData);
   const [editListMenuOpen, setEditListMenuOpen] = useState(false);
 
   const fetchAllListItems = useCallback(
@@ -29,7 +31,7 @@ function ChecklistView({currentList, didEditList}) {
     }, [currentList])
 
   useEffect(() => {
-    if(isMounted.current && currentList.listId !== undefined) {
+    if(isMounted.current && currentList.listId !== 0) {
       fetchAllListItems()
     } else {
       isMounted.current = true;

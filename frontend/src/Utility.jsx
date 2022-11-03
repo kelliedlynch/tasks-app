@@ -1,6 +1,5 @@
 
 let backend = "";
-console.log(window.location.hostname);
 switch(window.location.hostname) {
   case "localhost":
   case "127.0.0.1":

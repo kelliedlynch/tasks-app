@@ -19,7 +19,7 @@ CREATE TABLE "list_item" (
 INSERT INTO "list" ("list_id","list_name","default") VALUES (1,'Early Morning',1),
  (3,'Late Morning',0),
  (6,'After Lunch',0);
-INSERT INTO "list_item" ("item_name","completed","item_id","list_id") VALUES ('start on the chores',1,1,1),
+INSERT INTO "list_item" ("item_name","completed","item_id","list_id") VALUES ('start on the chores',0,1,1),
  ('sweep til the floors are clean',0,2,1),
  ('polish and wax',0,3,1),
  ('do laundry',0,4,1),

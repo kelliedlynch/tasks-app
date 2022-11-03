@@ -1,6 +1,6 @@
 import React from "react";
 
-function AppHeader({title}) {
+function AppHeaderView({title}) {
 
   return (
     <header>
@@ -12,4 +12,4 @@ function AppHeader({title}) {
 
 }
 
-export default AppHeader;
+export default AppHeaderView;

@@ -8,7 +8,6 @@ function ListsViewList({listData, setCurrentList}) {
   const [list, ] = useState(listData);
   // const [showEditButton, setShowEditButton] = useState(false);
 
-  console.log("ListsViewList", list.listId);
 
   function switchList() {
     // console.log(list.listId);
