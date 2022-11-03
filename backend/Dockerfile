@@ -3,8 +3,8 @@ FROM python:3.7
 
 # 2
 RUN pip install gunicorn
-ls
-pwd
+RUN ls
+RUN pwd
 RUN pip install -r backend/requirements.txt
 
 # 3
