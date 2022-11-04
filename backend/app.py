@@ -37,6 +37,18 @@ def edit_list_item():
          connection.commit()
    return response
 
+@app.put("/add-item")
+def add_item_to_list():
+   query = "INSERT INTO list_item (item_name, list_id) VALUES ('%s', '%s')" % (request.json["item"]["item_name"], request.json["list_id"])
+   with sql.connect("database.db") as connection:
+         cursor = connection.cursor()
+         cursor.execute(query)
+         connection.commit()
+
+   response = Response()
+   response.set_data(json.dumps({}))
+   return response
+
 @app.patch("/edit-item-new")
 def edit_list_item_new():
    response = Response()
@@ -94,6 +106,42 @@ def edit_list():
          connection.commit()
    return response
 
+@app.put("/add-list")
+def add_list():
+   query = "INSERT INTO list (list_name) VALUES ('%s')" % (request.json["list_name"])
+
+   response = Response()
+   with sql.connect("database.db") as connection:
+      cursor = connection.cursor()
+      cursor.execute(query)
+      list_id = cursor.lastrowid
+      response.set_data(json.dumps( { "list_id": list_id }))
+      connection.commit()
+
+   return response
+
+@app.delete("/delete-list")
+def delete_list():
+   queries = [
+      "DELETE FROM list WHERE list_id=%s" % request.json["list_id"],\
+      "DELETE FROM list_item WHERE list_id=%s" % request.json["list_id"]
+   ]
+
+   with sql.connect("database.db") as connection:
+      cursor = connection.cursor()
+      cursor.execute("SELECT is_default from list WHERE list_id=%s" % request.json["list_id"])
+      is_default = cursor.fetchone()[0]
+      if is_default == 1:
+         cursor.execute("SELECT list_id from list WHERE is_default=0 LIMIT 1")
+         new_default = cursor.fetchone()[0]
+         cursor.execute("UPDATE list SET is_default=1 WHERE list_id=%s" % new_default)
+      cursor.execute("DELETE FROM list WHERE list_id=%s" % request.json["list_id"])
+      cursor.execute("DELETE FROM list_item WHERE list_id=%s" % request.json["list_id"])
+      connection.commit()
+
+   response = Response()
+   return response
+
 
 @app.get("/get-lists")
 def get_all_lists():
@@ -108,7 +156,7 @@ def get_all_lists():
       query_array.append ({
          "listId": row["list_id"],
          "listName": row["list_name"],
-         "isDefault": row["default"]
+         "isDefault": row["is_default"]
          })
    query_results = jsonify(query_array)
    return query_results

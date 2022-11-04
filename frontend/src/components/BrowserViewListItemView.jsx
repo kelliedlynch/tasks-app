@@ -19,9 +19,7 @@ function BrowserViewListItemView({listData, setCurrentList}) {
 
   return(
     <ListGroup.Item as="button" onClick={switchList} >
-
           {list.listName}
-
     </ListGroup.Item>
   );
 }

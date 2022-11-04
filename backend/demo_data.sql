@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS "list_items";
 CREATE TABLE "list" (
 	"list_id"	INTEGER NOT NULL UNIQUE,
 	"list_name"	TEXT NOT NULL,
-	"default"	INTEGER NOT NULL DEFAULT 0,
+	"is_default"	INTEGER NOT NULL DEFAULT 0,
 	PRIMARY KEY("list_id" AUTOINCREMENT)
 );
 CREATE TABLE "list_item" (
@@ -16,7 +16,7 @@ CREATE TABLE "list_item" (
 	"list_id"	INTEGER DEFAULT 0,
 	PRIMARY KEY("item_id" AUTOINCREMENT)
 );
-INSERT INTO "list" ("list_id","list_name","default") VALUES (1,'Early Morning',1),
+INSERT INTO "list" ("list_id","list_name","is_default") VALUES (1,'Early Morning',1),
  (3,'Late Morning',0),
  (6,'After Lunch',0);
 INSERT INTO "list_item" ("item_name","completed","item_id","list_id") VALUES ('start on the chores',0,1,1),

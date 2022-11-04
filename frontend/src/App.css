@@ -59,6 +59,7 @@
 
 #leftPanel {
   overflow: hidden ;
+  /*min-width: max-content;*/
 }
 
 #leftPanel h4 {

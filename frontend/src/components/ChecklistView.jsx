@@ -7,23 +7,24 @@ import Button from "react-bootstrap/Button";
 import { FiEdit } from "react-icons/fi";
 
 import ListItemView from "./ListItemView";
-import AddListItemForm from "./AddListItemForm";
+import AddListItemFormView from "./AddListItemFormView";
 import EditListMenuView from "./EditListMenuView";
-import { BACKEND_URL, GET_API, DELETE_ITEM_API, sortList } from "../Utility";
+import ConfirmDeleteListView from "./ConfirmDeleteListView";
+import { BACKEND_URL, GET_API, DELETE_ITEM_API, DELETE_LIST_API, sortList } from "../Utility";
 
 // console.log("ChecklistBody loaded");
 
-function ChecklistView({currentList, didEditList}) {
+function ChecklistView({currentList, didEditList, didDeleteCurrentList }) {
   const isMounted = useRef(false);
 
-  let listData = currentList;
-  listData["items"] = [];
-
-  const [list, setList] = useState(listData);
+  const [list, setList] = useState({...currentList, items: []});
   const [editListMenuOpen, setEditListMenuOpen] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const fetchAllListItems = useCallback(
     async () => {
+      console.log("fetching all list items");
+
       const response = await fetch(BACKEND_URL + GET_API + "/" + currentList.listId );
       const rawList = await response.json();
       const listData = {...currentList, "items": sortList(rawList)};
@@ -57,7 +58,24 @@ function ChecklistView({currentList, didEditList}) {
   }
 
   function didClickDeleteList(listId) {
-    console.log("confirm delete list");
+    setEditListMenuOpen(false);
+    setShowConfirmModal(true);
+  }
+
+  async function didDeleteList(listId) {
+    const requestOptions = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        list_id: listId
+      })
+    }
+    await fetch(BACKEND_URL + DELETE_LIST_API, requestOptions);
+    didDeleteCurrentList();
+  }
+
+  function closeConfirmModal() {
+    setShowConfirmModal(false);
   }
 
   async function didClickDeleteListItem(itemId) {
@@ -96,7 +114,7 @@ function ChecklistView({currentList, didEditList}) {
         didClickDeleteListItem={didClickDeleteListItem}
         />
       )}
-      <li className="list-group-item"><AddListItemForm didChangeList={didChangeList} listId={list.listId} /></li>
+      <li className="list-group-item"><AddListItemFormView didChangeList={didChangeList} listId={list.listId} /></li>
     </ListGroup>
 
     <EditListMenuView
@@ -106,6 +124,14 @@ function ChecklistView({currentList, didEditList}) {
       didEditListDetails={didEditListDetails}
       closeEditListMenu={closeEditListMenu}
       didClickDeleteList={didClickDeleteList} />
+
+    <ConfirmDeleteListView
+      show={showConfirmModal}
+      hide={closeConfirmModal}
+      listName={list.listName}
+      didDeleteList={() => didDeleteList(list.listId)}
+      closeConfirmModal={closeConfirmModal}
+    />
     </>
   );
 }

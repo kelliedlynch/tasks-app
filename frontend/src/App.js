@@ -38,15 +38,13 @@ function App() {
     initLists();
   }, [initLists]);
 
-  // function updateLocalList(listData) {
-  //   let newAllLists = allLists;
-  //   newAllLists.some( list => {
-  //     if(list.listId === listData.id) {
-  //       list = listData;
-  //     }
-  //     return false;
-  //   })
-  // }
+  function didAddNewList() {
+    initLists()
+  }
+
+  function didDeleteCurrentList() {
+    initLists();
+  }
 
   function didSetCurrentList(listId) {
     setCurrentList(listId);
@@ -77,7 +75,11 @@ function App() {
     <div className="d-flex">
       <Collapse in={showLeftPanel} dimension="width">
         <div className="theme-bg-contrast-lt" id="leftPanel">
-          <BrowserView allLists={allLists} setCurrentList={didSetCurrentList} />
+          <BrowserView
+            allLists={allLists}
+            setCurrentList={didSetCurrentList}
+            didAddNewList={didAddNewList}
+          />
         </div>
       </Collapse>
       <div className="panel-preview"></div>
@@ -92,7 +94,11 @@ function App() {
         </Button>
       </div>
       <div className="flex-fill px-3">
-        <ChecklistView currentList={allLists[currentList]} didEditList={didEditList} />
+        <ChecklistView
+          currentList={allLists[currentList]}
+          didEditList={didEditList}
+          didDeleteCurrentList={didDeleteCurrentList}
+        />
       </div>
     </div>
 

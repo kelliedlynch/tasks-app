@@ -4,9 +4,9 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 
-import { BACKEND_URL, EDIT_ITEM_API } from "../Utility";
+import { BACKEND_URL, ADD_ITEM_API } from "../Utility";
 
-function AddListItemForm(props) {
+function AddListItemFormView(props) {
   const [newListItemName, setNewListItemName] = useState("");
 
   const onChange = event => setNewListItemName(event.target.value);
@@ -20,14 +20,16 @@ function AddListItemForm(props) {
 
   async function addListItem(item) {
     const requestOptions = {
-      method: 'POST',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        do: "add_list_item",
-        item_name: newListItemName,
-        list_id: props.listId })
+        list_id: props.listId,
+        item: {
+          item_name: newListItemName,
+        }
+      })
     }
-    await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
+    await fetch(BACKEND_URL + ADD_ITEM_API, requestOptions);
     props.didChangeList()
   }
 
@@ -46,4 +48,4 @@ function AddListItemForm(props) {
   );
 }
 
-export default AddListItemForm;
+export default AddListItemFormView;

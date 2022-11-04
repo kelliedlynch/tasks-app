@@ -22,7 +22,10 @@ export const GET_API = "get-items";
 export const GET_LISTS_API = "get-lists";
 export const EDIT_ITEM_API = "edit-item-new";
 export const EDIT_LIST_API = "edit-list";
-export const DELETE_ITEM_API = "delete-item"
+export const DELETE_ITEM_API = "delete-item";
+export const ADD_ITEM_API = "add-item";
+export const DELETE_LIST_API = "delete-list";
+export const ADD_LIST_API = "add-list";
 
 export const NEW_LIST_ID = -1;
 
