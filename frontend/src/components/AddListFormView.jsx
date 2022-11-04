@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 
 import ListGroup from "react-bootstrap/ListGroup";
+import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 import { BsPlusCircle } from "react-icons/bs";
@@ -43,23 +44,27 @@ function AddListItemFormView({ createNewList }) {
 
   if(showFormField) {
     return (
-      <ListGroup.Item>
-        <Form.Control type="text"
+        <Form.Control
+          type="text"
+          size="sm"
           defaultValue="New List"
           onBlur={() => setShowFormField(false)}
           onKeyUp={event => handleKeyPress(event)}
           // onFocus={selectText}
           // onChange={onFieldValueChange}
           ref={inputField}
+          className="create-list-field"
         />
-      </ListGroup.Item>
     );
   }
 
   return (
-    <ListGroup.Item as="button" onClick={() => setShowFormField(true)} >
+    <Button
+      variant="listbrowser"
+      onClick={() => setShowFormField(true)}
+    >
       <BsPlusCircle /> New List
-    </ListGroup.Item>
+    </Button>
   );
 
 }

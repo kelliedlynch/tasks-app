@@ -7,7 +7,7 @@ import BrowserViewListItemView from "./BrowserViewListItemView";
 import AddListFormView from "./AddListFormView";
 import { BACKEND_URL, ADD_LIST_API } from "../Utility";
 
-function BrowserView({ allLists, setCurrentList, didAddNewList }) {
+function BrowserView({ allLists, currentListId, setCurrentList, didAddNewList }) {
   const [lists, setLists] = useState(allLists);
 
   useEffect(() => {
@@ -26,14 +26,22 @@ function BrowserView({ allLists, setCurrentList, didAddNewList }) {
     didAddNewList();
   }
 
+  console.log("currentListId", currentListId)
+
   return (
     <>
-    <div className="px-3 pt-3 pb-1">
-      <h4 className="theme-base">All Lists</h4>
+    <div className="listbrowser">
+      <h4 className="theme-accent listbrowser">All Lists</h4>
     </div>
-    <ListGroup variant="flush">
+    <ListGroup variant="flush" className="">
       {Object.keys(lists).map( thisId => {
-        return(<BrowserViewListItemView key={thisId} listData={lists[thisId]} setCurrentList={setCurrentList} />);
+        return(
+          <BrowserViewListItemView
+            key={thisId}
+            listData={lists[thisId]}
+            isCurrentList={parseInt(thisId) === currentListId}
+            setCurrentList={setCurrentList}
+          />);
       })}
       <AddListFormView
         createNewList={createNewList}

@@ -71,12 +71,13 @@ function App() {
 
   return (
     <>
-    <AppHeaderView title="ToDo List Demo" />
-    <div className="d-flex">
+    <AppHeaderView title="Tasks-App Demo" />
+    <div className="d-flex h-100">
       <Collapse in={showLeftPanel} dimension="width">
         <div className="theme-bg-contrast-lt" id="leftPanel">
           <BrowserView
             allLists={allLists}
+            currentListId={currentList}
             setCurrentList={didSetCurrentList}
             didAddNewList={didAddNewList}
           />

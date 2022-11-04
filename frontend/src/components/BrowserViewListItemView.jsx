@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 // import { FaEdit } from "react-icons/fa";
 
 import ListGroup from "react-bootstrap/ListGroup";
+import Button from "react-bootstrap/Button";
 
 
-function BrowserViewListItemView({listData, setCurrentList}) {
+function BrowserViewListItemView({listData, isCurrentList, setCurrentList}) {
   const [list, setList] = useState(listData);
   // const [showEditButton, setShowEditButton] = useState(false);
 
@@ -17,10 +18,24 @@ function BrowserViewListItemView({listData, setCurrentList}) {
     setCurrentList(list.listId);
   }
 
+  console.log("isCurrentList", isCurrentList);
+
   return(
-    <ListGroup.Item as="button" onClick={switchList} >
-          {list.listName}
-    </ListGroup.Item>
+    // <ListGroup.Item
+    //   as="Button"
+    //   onClick={switchList}
+    //   variant="listbrowser"
+    //   // className={"browser-item " + (isCurrentList ? "current-list" : "")}
+    // >
+    //       {list.listName}
+    // </ListGroup.Item>
+    <Button
+      variant="listbrowser"
+      onClick={switchList}
+      className={isCurrentList ? " current-list": ""}
+    >
+      {list.listName}
+    </Button>
   );
 }
 

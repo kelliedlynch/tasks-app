@@ -2,6 +2,7 @@
   --base: #812B83;
   --accent: #B52A2E;
   --contrast: #B5B22A;
+  --base-mid: #A837A9;
   --base-lt: #F3F5F6;
   --accent-lt: #FAF0FA;
   --contrast-lt: #F2F8F6;
@@ -59,15 +60,44 @@
 
 #leftPanel {
   overflow: hidden ;
+  text-align: right;
   /*min-width: max-content;*/
 }
 
-#leftPanel h4 {
+h4.listbrowser {
   min-width: max-content;
+  padding-top: 2rem;
+  padding-bottom: 0.2rem;
+  padding-right: 0.2rem;
 }
 
-#leftPanel .list-group-item {
+.browser-item.list-group-item {
+  /*min-width: max-content;*/
+}
+
+.btn-listbrowser.current-list {
+  /*border: 1px solid var(--accent);*/
+  /*background-color: var(--accent-lt);*/
+  /*text-decoration: underline;*/
+  color: var(--base);
+  border-bottom: 2px solid var(--base);
+}
+
+.btn-listbrowser {
+  /*color: var(--base);*/
+  background-color: white;
   min-width: max-content;
+  width: 12rem;
+  text-align: right;
+}
+
+button:hover.btn.btn-listbrowser {
+  border-bottom-color: var(--base-mid);
+  color: var(--base-mid);
+}
+
+.create-list-field {
+  width: 96%;
 }
 
 .list-item-container {
