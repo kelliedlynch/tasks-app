@@ -9,7 +9,7 @@ import { FiEdit } from "react-icons/fi";
 import ListItemView from "./ListItemView";
 import AddListItemForm from "./AddListItemForm";
 import EditListMenuView from "./EditListMenuView";
-import { BACKEND_URL, GET_API, sortList } from "../Utility";
+import { BACKEND_URL, GET_API, DELETE_ITEM_API, sortList } from "../Utility";
 
 // console.log("ChecklistBody loaded");
 
@@ -60,19 +60,17 @@ function ChecklistView({currentList, didEditList}) {
     console.log("confirm delete list");
   }
 
-  // async function deleteListItem(item) {
-  //   const requestOptions = {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({
-  //       do: "delete_list_item",
-  //       item_id: item.itemId,
-  //     })
-  //   }
-  //   await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
-
-  //   didChangeList()
-  // }
+  async function didClickDeleteListItem(itemId) {
+    const requestOptions = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        item_id: itemId
+      })
+    }
+    await fetch(BACKEND_URL + DELETE_ITEM_API, requestOptions);
+    didChangeList();
+  }
 
   return (
     <>
@@ -95,6 +93,7 @@ function ChecklistView({currentList, didEditList}) {
         key={listItem.itemId}
         thisItem={listItem}
         didChangeList={didChangeList}
+        didClickDeleteListItem={didClickDeleteListItem}
         />
       )}
       <li className="list-group-item"><AddListItemForm didChangeList={didChangeList} listId={list.listId} /></li>

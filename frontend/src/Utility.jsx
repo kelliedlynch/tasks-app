@@ -22,6 +22,7 @@ export const GET_API = "get-items";
 export const GET_LISTS_API = "get-lists";
 export const EDIT_ITEM_API = "edit-item-new";
 export const EDIT_LIST_API = "edit-list";
+export const DELETE_ITEM_API = "delete-item"
 
 export const NEW_LIST_ID = -1;
 
@@ -42,3 +43,9 @@ export function sortList( unsortedList ) {
   return incompleteItems.concat(completeItems);
 }
 
+export const toSnakeCase = str =>
+  str &&
+  str
+    .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+    .map(x => x.toLowerCase())
+    .join('_');

@@ -10,11 +10,11 @@ import { FiEdit } from "react-icons/fi";
 
 import ListItemEditMenuView from "./ListItemEditMenuView";
 
-import { BACKEND_URL, EDIT_ITEM_API } from "../Utility";
+import { BACKEND_URL, EDIT_ITEM_API, toSnakeCase } from "../Utility";
 
 // console.log("ListItem loaded");
 
-function ListItemView( {thisItem, didChangeList} ) {
+function ListItemView( {thisItem, didChangeList, didClickDeleteListItem } ) {
   const [showEditNameForm, setShowEditNameForm] = useState(false);
   const [showOpenMenuButton, setShowOpenMenuButton] = useState(false);
   const [showEditListItemMenu, setShowEditListItemMenu] = useState(false);
@@ -47,7 +47,8 @@ function ListItemView( {thisItem, didChangeList} ) {
 
   function handleKeyPress(event) {
     if(event.key === "Enter") {
-      changeItemName(event.target.value)
+      didEditListItem({ itemId: listItem.itemId, itemName: event.target.value });
+      unfocusItemName();
     }
     if(event.key === "Escape") {
       unfocusItemName();
@@ -56,25 +57,15 @@ function ListItemView( {thisItem, didChangeList} ) {
 
   async function toggleCompleted() {
     const completed = (listItem.completed === 0) ? 1 : 0;
-    didEditListItem({item_id: listItem.itemId, completed: completed});
-    // const requestOptions = {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     do: "update_completed",
-    //     item_id: listItem.itemId,
-    //     completed: completed,
-    //      })
-    //   };
-    // await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
-    // props.didChangeList();
+    didEditListItem({itemId: listItem.itemId, completed: completed});
   }
 
-  async function didEditListItem(item) {
-    console.log("editing", item)
-    // for(const [key, value] of Object.entries(item)) {
-
-    // }
+  async function didEditListItem(itemData) {
+    let item = {}
+    for(const [key, value] of Object.entries(itemData)) {
+      item[toSnakeCase(key)] = value;
+    }
+    console.log(item)
     const requestOptions = {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -90,24 +81,8 @@ function ListItemView( {thisItem, didChangeList} ) {
   }
 
   function closeEditListItemMenu() {
+    console.log("closing menu")
     setShowEditListItemMenu(false);
-  }
-
-  async function changeItemName(itemName) {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        do: "update_item_name",
-        item_id: listItem.itemId,
-        item_name: itemName,
-         })
-      };
-      await fetch(BACKEND_URL + EDIT_ITEM_API, requestOptions);
-      let updatedItem = {...listItem};
-      updatedItem.itemName = itemName;
-      await setListItem(updatedItem);
-      setShowEditNameForm(false);
   }
 
   return (
@@ -164,6 +139,7 @@ function ListItemView( {thisItem, didChangeList} ) {
         listItem={listItem}
         didEditListItem={didEditListItem}
         didCloseEditListItemMenu={closeEditListItemMenu}
+        didClickDeleteListItem={() => didClickDeleteListItem(listItem.itemId)}
       />
       </>
   );
