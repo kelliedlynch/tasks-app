@@ -9,7 +9,8 @@ switch(window.location.hostname) {
     backend = "https://kellielynch.org/wsgi-scripts/tasks.py/";
     break;
   case "kelliedlynch.github.io":
-    backend = "https://tasks-app-backend-b4gpr763fq-uc.a.run.app/";
+//    backend = "https://tasks-app-backend-b4gpr763fq-uc.a.run.app/";
+    backend = "https://kellielynch.org/wsgi-scripts/tasks.py/";
     break;
   default:
     backend = ""
